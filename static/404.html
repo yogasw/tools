@@ -9,7 +9,7 @@
       // string into just a query string, and then redirects the browser
       // to the new url with only a query string and hash fragment
       (function(){
-        var pathSegmentsToKeep = 1; // for GitHub Pages (/<repo-name>/)
+        var pathSegmentsToKeep = 0; // for custom domain (no repo path)
 
         var l = window.location;
         l.replace(
