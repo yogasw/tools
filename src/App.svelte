@@ -56,9 +56,10 @@
 
   $: activeToolData = $currentTool ? $tools.find(t => t.id === $currentTool) : null;
 
-  // Keyboard shortcut for search (CMD+K or CTRL+K)
+  // Keyboard shortcut for search (CMD+K on Mac, CTRL+K on Windows/Linux)
   function handleKeyDown(e) {
-    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    const correctModifier = isMac ? e.metaKey : e.ctrlKey;
+    if (correctModifier && e.key === 'k') {
       e.preventDefault();
       openSearchModal();
     }
@@ -261,6 +262,9 @@
                 {isMac ? '⌘' : 'CTRL'} K
               </kbd>
             </button>
+            <p class="text-xs text-gray-500 dark:text-gray-500 text-center mt-2">
+              Press <kbd class="px-1 py-0.5 text-xs font-semibold bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded">{isMac ? '⌘' : 'CTRL'}</kbd> + <kbd class="px-1 py-0.5 text-xs font-semibold bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded">K</kbd> to search
+            </p>
           </div>
         </div>
 
