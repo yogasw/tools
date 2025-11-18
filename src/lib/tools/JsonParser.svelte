@@ -11,6 +11,29 @@
   let expandedNodes = new Set();
   let showFormatsInfo = false;
 
+  function expandAllNodes(obj, path = '') {
+    if (obj && typeof obj === 'object') {
+      expandedNodes.add(path);
+      
+      if (Array.isArray(obj)) {
+        obj.forEach((item, index) => {
+          const newPath = path ? `${path}.[${index}]` : `[${index}]`;
+          expandAllNodes(item, newPath);
+        });
+      } else {
+        Object.keys(obj).forEach(key => {
+          const newPath = path ? `${path}.${key}` : key;
+          expandAllNodes(obj[key], newPath);
+        });
+      }
+    }
+  }
+
+  function collapseAllNodes() {
+    expandedNodes.clear();
+    expandedNodes = expandedNodes;
+  }
+
   function parseJsonString(jsonString) {
     // For Ruby format
     let oldString = jsonString;
@@ -108,6 +131,10 @@
       // Parse for tree view
       try {
         parsedOutput = JSON.parse(result);
+        // Auto expand all nodes by default
+        expandedNodes.clear();
+        expandAllNodes(parsedOutput, '');
+        expandedNodes = expandedNodes; // trigger reactivity
       } catch (e) {
         parsedOutput = result;
       }
@@ -220,7 +247,7 @@
   </div>
 
   <!-- Main Content - Side by Side Layout -->
-  <div class="flex-1 grid lg:grid-cols-2 gap-4 px-4 pb-4 overflow-hidden">
+  <div class="flex-1 grid lg:grid-cols-2 gap-4 px-4 pb-4 overflow-hidden pt-4">
     <!-- Left Side - Input -->
     <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 flex flex-col overflow-hidden">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex-shrink-0">Input</h2>
@@ -293,6 +320,22 @@
               Tree
             </button>
           </div>
+
+          <!-- Tree Controls (only show in tree mode) -->
+          {#if viewMode === 'tree' && outputText}
+            <button
+              on:click={() => { expandAllNodes(parsedOutput, ''); expandedNodes = expandedNodes; }}
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              Expand All
+            </button>
+            <button
+              on:click={collapseAllNodes}
+              class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              Collapse All
+            </button>
+          {/if}
 
           {#if outputText}
             <button

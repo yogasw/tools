@@ -8,8 +8,12 @@
   $: isObject = value !== null && typeof value === 'object' && !Array.isArray(value);
   $: isArray = Array.isArray(value);
   $: isPrimitive = !isObject && !isArray;
-  $: currentPath = path ? `${path}.${keyName}` : keyName;
+  $: currentPath = path ? (keyName ? `${path}.${keyName}` : path) : keyName;
   $: expanded = isExpanded(currentPath);
+  
+  function handleToggle() {
+    toggleNode(currentPath);
+  }
 
   function getValueType(val) {
     if (val === null) return 'null';
@@ -44,7 +48,8 @@
   {:else}
     <!-- Object or Array -->
     <button
-      on:click={() => toggleNode(currentPath)}
+      on:click={handleToggle}
+      type="button"
       class="flex items-start gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded px-1 -ml-1 w-full text-left transition-colors"
     >
       <!-- Expand/Collapse Icon -->
