@@ -11,16 +11,37 @@ This is a **Tools Collection** web application - a modular, modern collection of
 - **Package Manager**: npm
 
 ## Color Scheme & Theme
-- **Primary Color**: Blue (`primary-*` from Tailwind)
+- **Design Style**: Modern with gradient backgrounds and glassmorphism effects
+- **Primary Colors**: Blue to Purple gradient (`from-blue-600 via-purple-600 to-pink-600`)
   - primary-50 to primary-950 (defined in tailwind.config.js)
   - Main accent: `primary-600` for light mode, `primary-400` for dark mode
 - **Background Colors**:
-  - Light mode: `bg-white`, `bg-gray-50`
-  - Dark mode: `bg-gray-900`, `bg-gray-800`
+  - Light mode: Gradient `from-gray-50 via-blue-50 to-purple-50`
+  - Dark mode: `from-gray-900 via-gray-900 to-gray-900`
+  - Cards: `bg-white dark:bg-gray-800` with shadows
 - **Text Colors**:
   - Light mode: `text-gray-900`, `text-gray-600`
   - Dark mode: `text-gray-100`, `text-gray-400`
 - **Theme System**: Supports dark and light mode using `class`-based dark mode (Tailwind)
+- **UI Effects**:
+  - Glassmorphism on header (`backdrop-blur-lg`)
+  - Gradient overlays on hover
+  - Smooth transitions and animations
+  - Card hover effects (scale, shadow, translate)
+
+## Routing System
+- **Type**: Hash-based routing (`#/tool-name`)
+- **Router Store**: `src/lib/stores/router.js`
+- **Features**:
+  - SEO-friendly URLs for each tool
+  - Browser history support
+  - Direct access to tools via URL
+  - Dynamic page titles based on current route
+  - Dynamic meta descriptions
+- **Usage**:
+  - Home: `#/` or no hash
+  - Tool pages: `#/base64`, `#/camera-mic-test`, `#/wa-link-generator`
+  - Navigate using `navigate(path)` function from router store
 
 ## Project Structure
 ```
@@ -39,7 +60,8 @@ src/
 │   │   └── WhatsAppLinkGenerator.svelte
 │   ├── stores/          # Svelte stores for state management
 │   │   ├── theme.js     # Theme management (dark/light mode)
-│   │   └── tools.js     # Tools registry
+│   │   ├── tools.js     # Tools registry
+│   │   └── router.js    # Hash-based routing system
 │   └── utils/           # Utility functions (currently empty)
 ├── App.svelte           # Main app component with routing
 ├── app.css              # Global CSS with Tailwind directives
@@ -72,6 +94,13 @@ To add a new tool to the collection:
      'your-tool-id': YourTool
    };
    ```
+
+**Note**: The tool will automatically:
+- Appear in the home page grid
+- Get its own URL route at `#/your-tool-id`
+- Be searchable
+- Have a dynamic page title
+- Support browser back/forward navigation
 
 ### 2. Component Best Practices
 
