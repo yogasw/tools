@@ -43,6 +43,15 @@ export const toolsRegistry = [
     icon: '🔍',
     type: 'internal',
     category: 'parser'
+  },
+  {
+    id: 'beo-echo',
+    name: 'Beo echo',
+    description: 'Beo echo is api mocking tools for testing and development',
+    icon: 'https://beo-echo.xyz/favicon.svg',
+    type: 'external',
+    url: 'https://beo-echo.xyz/',
+    category: 'testing'
   }
 ];
 
