@@ -23,9 +23,14 @@
       return;
     }
 
-    const cleanedNumber = cleanPhoneNumber(phoneNumber);
+    let cleanedNumber = cleanPhoneNumber(phoneNumber);
 
-    if (cleanedNumber.length < 10) {
+    // if start with 08, replace with country code 62 (Indonesia) as default
+    if (cleanedNumber.startsWith('08')) {
+      cleanedNumber = '62' + cleanedNumber.slice(1);
+    }
+
+    if (cleanedNumber.length < 6) {
       error = 'Phone number seems too short';
       return;
     }
