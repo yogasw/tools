@@ -1,0 +1,85 @@
+# Tools Collection
+
+A simple and modern collection of useful web tools built with Svelte and Tailwind CSS.
+
+## Features
+
+- **Modern UI**: Clean, responsive design with dark/light mode support
+- **Modular Architecture**: Easy to add new tools
+- **Fast**: Built with Vite for optimal performance
+- **Accessible**: Keyboard navigation and screen reader friendly
+
+## Current Tools
+
+1. **Base64 Encoder/Decoder** 🔐
+   - Encode text to Base64
+   - Decode Base64 strings
+   - Switch between modes easily
+
+2. **Camera & Mic Test** 🎥
+   - Test camera permissions and preview
+   - Test microphone permissions with audio level visualization
+   - Useful for debugging video call issues
+
+3. **WhatsApp Link Generator** 💬
+   - Generate WhatsApp click-to-chat links
+   - Pre-fill messages
+   - Support for international phone numbers
+
+## Tech Stack
+
+- **Svelte** - Reactive UI framework
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Utility-first CSS framework
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 16+ and npm
+
+### Installation
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Adding New Tools
+
+1. Create a new Svelte component in `src/lib/tools/`
+2. Register the tool in `src/lib/stores/tools.js`
+3. Import and add to the component mapping in `src/App.svelte`
+
+See `AI-RULES.md` for detailed guidelines.
+
+## Project Structure
+
+```
+src/
+├── lib/
+│   ├── components/     # Reusable UI components
+│   ├── tools/         # Tool modules
+│   ├── stores/        # State management
+│   └── utils/         # Utility functions
+├── App.svelte         # Main app
+├── app.css           # Global styles
+└── main.js           # Entry point
+```
+
+## Contributing
+
+Feel free to add new tools or improve existing ones!
+
+## License
+
+MIT
