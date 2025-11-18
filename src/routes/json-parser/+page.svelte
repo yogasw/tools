@@ -14,4 +14,6 @@
   <meta name="keywords" content="json parser, json tool, parse json, python json, ruby json, json formatter, json viewer" />
 </svelte:head>
 
-<JsonParser />
+<div class="main-content-height overflow-hidden">
+  <JsonParser />
+</div>

@@ -173,7 +173,7 @@
   }
 </script>
 
-<div class="h-screen flex flex-col overflow-hidden">
+<div class="h-full flex flex-col overflow-hidden">
   <!-- Header -->
   <div class="flex-shrink-0 border-b border-gray-200 dark:border-gray-800">
     <div class="flex items-center justify-between px-4 py-3">
