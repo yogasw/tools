@@ -35,6 +35,14 @@ export const toolsRegistry = [
     icon: '⏱️',
     type: 'internal',
     category: 'calculator'
+  },
+  {
+    id: 'json-parser',
+    name: 'JSON Parser',
+    description: 'Parse JSON from multiple formats and extract specific keys',
+    icon: '🔍',
+    type: 'internal',
+    category: 'parser'
   }
 ];
 
