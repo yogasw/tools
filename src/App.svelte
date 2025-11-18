@@ -216,6 +216,17 @@
           </h1>
         </button>
 
+        <!-- Search Hint -->
+        <button
+          on:click={openSearchModal}
+          class="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+        >
+          <span>Search</span>
+          <kbd class="px-1.5 py-0.5 text-xs font-semibold bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded">
+            {isMac ? '⌘' : 'CTRL'} K
+          </kbd>
+        </button>
+
         <!-- Theme Toggle -->
         <ThemeToggle />
       </div>
