@@ -1,22 +1,15 @@
 import { writable } from 'svelte/store';
 
 // Tools registry - tambah tools baru di sini dan akan otomatis muncul di navigation
+// type: 'internal' untuk halaman di dalam app, 'external' untuk link ke URL lain
 export const toolsRegistry = [
   {
     id: 'base64',
     name: 'Base64 Encoder/Decoder',
     description: 'Encode and decode Base64 strings',
     icon: '🔐',
-    type: 'internal', // internal atau external
-    category: 'encoding'
-  },
-  {
-    id: 'camera-mic-test',
-    name: 'Camera & Mic Test',
-    description: 'Test camera and microphone permissions',
-    icon: '🎥',
     type: 'internal',
-    category: 'media'
+    category: 'encoding'
   },
   {
     id: 'wa-link-generator',
@@ -25,6 +18,15 @@ export const toolsRegistry = [
     icon: '💬',
     type: 'internal',
     category: 'generator'
+  },
+  {
+    id: 'camera-mic-test',
+    name: 'Camera & Mic Test',
+    description: 'Test camera and microphone permissions',
+    icon: '🎥',
+    type: 'external',
+    url: 'https://yogasw.my.id/test-permission-camera-and-mic/',
+    category: 'media'
   }
 ];
 
