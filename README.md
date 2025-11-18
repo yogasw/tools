@@ -62,6 +62,39 @@ npm run preview
 
 See `AI-RULES.md` for detailed guidelines.
 
+## Deployment
+
+This project is configured for automatic deployment to GitHub Pages.
+
+### Auto Deployment
+
+The site automatically deploys to GitHub Pages when you push to the `main` or `master` branch.
+
+**Setup Steps:**
+
+1. Go to your GitHub repository settings
+2. Navigate to **Pages** section
+3. Under **Source**, select **GitHub Actions**
+4. Push to `main` or `master` branch to trigger deployment
+
+The deployment workflow is defined in `.github/workflows/deploy.yml`.
+
+### Manual Deployment
+
+You can also manually trigger the deployment:
+
+1. Go to the **Actions** tab in your GitHub repository
+2. Select **Deploy to GitHub Pages** workflow
+3. Click **Run workflow**
+
+### Custom Domain
+
+To use a custom domain:
+
+1. Add a `CNAME` file to the `public/` directory with your domain
+2. Configure your domain's DNS settings to point to GitHub Pages
+3. Update the `base` path in `vite.config.js` if needed
+
 ## Project Structure
 
 ```

@@ -169,6 +169,31 @@ Tools can be marked as `type: 'external'` in the registry. These link to externa
 - MediaDevices API for camera/mic tools
 - Clipboard API for copy functionality
 
+## Deployment
+
+### GitHub Pages Auto Deployment
+The project is configured for automatic deployment to GitHub Pages via GitHub Actions.
+
+**Workflow**: `.github/workflows/deploy.yml`
+- Triggers on push to `main` or `master` branch
+- Can also be triggered manually via workflow_dispatch
+- Builds the project and deploys to GitHub Pages
+
+**Base Path Configuration**:
+- Production (GitHub Pages): `/tools/` (configured in `vite.config.js`)
+- Development: `/` (set via `VITE_BASE_PATH` environment variable)
+
+**Setup Requirements**:
+1. Enable GitHub Pages in repository settings
+2. Set source to "GitHub Actions"
+3. Ensure GitHub Actions has necessary permissions
+
+### Custom Domain
+To use a custom domain:
+1. Add `CNAME` file to `public/` directory
+2. Update `base` in `vite.config.js` to `/` or appropriate path
+3. Configure DNS settings
+
 ## Future Improvements
 - Add search/filter for tools
 - Add categories/tags system
