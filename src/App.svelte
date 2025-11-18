@@ -85,8 +85,9 @@
         break;
       case 'Enter':
         e.preventDefault();
-        if (filteredAndSortedTools[selectedIndex]) {
-          handleToolClick(filteredAndSortedTools[selectedIndex]);
+        if (toolButtons[selectedIndex]) {
+          // Trigger click on the button to ensure popup blockers don't interfere
+          toolButtons[selectedIndex].click();
         }
         break;
     }
