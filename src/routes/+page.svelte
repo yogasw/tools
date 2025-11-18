@@ -53,7 +53,7 @@
 </script>
 
 <svelte:head>
-  <title>Tools Collection - Simple & Modern</title>
+  <title>Dev Tools Utilities</title>
   <meta
     name="description"
     content="Simple and modern collection of useful web tools. Base64 encoder/decoder, camera & mic test, WhatsApp link generator, and more."
@@ -66,11 +66,7 @@
   <div class="text-center space-y-6">
     <!-- Icon -->
     <div class="flex justify-center">
-      <div
-        class="w-20 h-20 bg-gradient-to-br from-pink-500 to-red-500 rounded-2xl flex items-center justify-center shadow-xl"
-      >
-        <span class="text-4xl">🛠️</span>
-      </div>
+      <img src="/logo.svg" alt="logo" class="w-20 h-20" />
     </div>
 
     <!-- Title -->

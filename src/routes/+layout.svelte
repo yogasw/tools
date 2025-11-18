@@ -162,7 +162,7 @@
           class="flex items-center space-x-2 hover:opacity-70 transition-opacity"
         >
           <span class="text-xl">🛠️</span>
-          <h1 class="text-lg font-bold text-gray-900 dark:text-white">Tools</h1>
+          <h1 class="text-lg font-bold text-gray-900 dark:text-white">Dev Utilities</h1>
         </a>
 
         <!-- Right Actions -->
