@@ -27,6 +27,14 @@ export const toolsRegistry = [
     type: 'external',
     url: 'https://yogasw.my.id/test-permission-camera-and-mic/',
     category: 'media'
+  },
+  {
+    id: 'date-time-diff',
+    name: 'Date Time Difference',
+    description: 'Calculate the difference between two dates and times',
+    icon: '⏱️',
+    type: 'internal',
+    category: 'calculator'
   }
 ];
 
