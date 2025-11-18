@@ -12,9 +12,9 @@ export const toolsRegistry = [
     category: 'encoding'
   },
   {
-    id: 'wa-link-generator',
-    name: 'WhatsApp Link Generator',
-    description: 'Generate WhatsApp click-to-chat links',
+    id: 'wame-link-generator',
+    name: 'WhatsApp Link Generator (wa.me)',
+    description: 'Generate wa.me WhatsApp click-to-chat links',
     icon: '💬',
     type: 'internal',
     category: 'generator'
