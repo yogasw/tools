@@ -162,40 +162,31 @@
     </p>
   </div>
 
-  <!-- Format Configuration -->
+  <!-- Input Section -->
   <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-6">
-    <div class="space-y-2">
-      <label for="date-format" class="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-        Date Format
-      </label>
-      <div class="flex gap-2">
+    <!-- Format Configuration - Compact -->
+    <div class="mb-4 pb-4 border-b border-gray-200 dark:border-gray-800">
+      <div class="flex items-center gap-2">
+        <label for="date-format" class="text-xs font-medium text-gray-600 dark:text-gray-400 whitespace-nowrap">
+          Format:
+        </label>
         <input
           id="date-format"
           type="text"
           bind:value={dateFormat}
           on:blur={handleFormatChange}
           placeholder="YYYY/MM/DD, HH:mm:ss"
-          class="flex-1 px-4 py-2 bg-gray-50 dark:bg-[#0a0a0a] border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors font-mono text-sm"
+          class="flex-1 px-3 py-1.5 bg-gray-50 dark:bg-[#0a0a0a] border border-gray-300 dark:border-gray-700 rounded text-xs text-gray-900 dark:text-white font-mono focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
         />
         <button
           on:click={handleFormatChange}
-          class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors text-sm font-medium"
+          class="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white rounded text-xs font-medium whitespace-nowrap"
         >
           Apply
         </button>
       </div>
-      <p class="text-xs text-gray-500 dark:text-gray-400">
-        Examples: YYYY/MM/DD, HH:mm:ss | DD-MM-YYYY HH:mm | YYYY-MM-DD HH:mm:ss
-      </p>
     </div>
-  </div>
 
-  <!-- Input Section -->
-  <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-6 mb-6">
     <div class="grid md:grid-cols-2 gap-6">
       <!-- Start Date -->
       <div class="space-y-2">
@@ -205,9 +196,6 @@
           </svg>
           Start Date & Time
         </label>
-        <p class="text-xs text-gray-500 dark:text-gray-400">
-          Format: {dateFormat}
-        </p>
         <div class="flex gap-2 relative">
           <input
             id="start-datetime"
@@ -257,9 +245,6 @@
           </svg>
           End Date & Time
         </label>
-        <p class="text-xs text-gray-500 dark:text-gray-400">
-          Format: {dateFormat}
-        </p>
         <div class="flex gap-2 relative">
           <input
             id="end-datetime"
