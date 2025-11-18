@@ -10,6 +10,14 @@
   let viewMode = 'text'; // 'text' or 'tree'
   let expandedNodes = new Set();
   let showFormatsInfo = false;
+  
+  // Autocomplete state
+  let availableKeys = [];
+  let showSuggestions = false;
+  let filteredSuggestions = [];
+  let selectedSuggestionIndex = 0;
+  let keysInput;
+  let suggestionsContainer;
 
   function expandAllNodes(obj, path = '') {
     if (obj && typeof obj === 'object') {
@@ -71,46 +79,49 @@
     if (!listArrayKey || listArrayKey.length === 0 || listArrayKey[0] === "") {
       return JSON.stringify(parsedInput, null, 2);
     } else {
-      let result = JSON.stringify(parsedInput);
+      let current = parsedInput;
+      
       for (let i = 0; i < listArrayKey.length; i++) {
         let key = listArrayKey[i].trim();
-        let j = JSON.parse(result);
-
-        if (j.hasOwnProperty(key)) {
-          if (typeof j[key] === "string") {
-            result = j[key];
-          } else {
-            result = JSON.stringify(j[key]);
-          }
-        } else {
-          if (key.includes("[") && key.includes("]") && Array.isArray(j)) {
-            let keyArray = key.replace(/\[|\]/g, '');
-            if (j[keyArray]) {
-              result = JSON.stringify(j[keyArray]);
+        
+        // Handle array[0] or object.key or [0] format
+        if (key.includes('[') && key.includes(']')) {
+          // Split by array notation: e.g., "buttons[0]" or "[0]"
+          const match = key.match(/^(.+?)?\[(\d+)\]$/);
+          if (match) {
+            const objKey = match[1]; // could be undefined for "[0]"
+            const index = parseInt(match[2]);
+            
+            // First access object key if exists
+            if (objKey && current && typeof current === 'object' && !Array.isArray(current)) {
+              current = current[objKey];
+            }
+            
+            // Then access array index
+            if (Array.isArray(current) && current[index] !== undefined) {
+              current = current[index];
             } else {
+              current = undefined;
               break;
             }
+          }
+        } else {
+          // Regular object key access
+          if (current && typeof current === 'object' && !Array.isArray(current) && current.hasOwnProperty(key)) {
+            current = current[key];
           } else {
+            current = undefined;
             break;
           }
         }
       }
 
-      let p = "";
-      try {
-        p = JSON.parse(result);
-      } catch (e) {
-        p = result;
+      // Handle result
+      if (current === undefined) {
+        return JSON.stringify(parsedInput, null, 2);
       }
-
-      if (typeof p === "string") {
-        try {
-          p = JSON.parse(p);
-        } catch (e) {
-          p = result;
-        }
-      }
-      return JSON.stringify(p, null, 2);
+      
+      return JSON.stringify(current, null, 2);
     }
   }
 
@@ -124,7 +135,7 @@
     }
 
     try {
-      let listKey = keysToParse ? keysToParse.split(",").map(k => k.trim()).filter(k => k) : [];
+      let listKey = keysToParse ? keysToParse.split(".").map(k => k.trim()).filter(k => k) : [];
       let result = processData(inputText, listKey);
       outputText = result;
 
@@ -194,11 +205,155 @@
     }
   }
 
+  // Extract all keys from JSON object
+  function extractKeys(obj, prefix = '') {
+    let keys = [];
+    
+    if (obj && typeof obj === 'object') {
+      if (Array.isArray(obj)) {
+        // For arrays, add index notation without dot prefix
+        obj.forEach((item, index) => {
+          const indexKey = `${prefix}[${index}]`;
+          keys.push(indexKey);
+          if (item && typeof item === 'object') {
+            const nestedKeys = extractKeys(item, indexKey);
+            keys = [...keys, ...nestedKeys];
+          }
+        });
+      } else {
+        // For objects, add key names
+        Object.keys(obj).forEach(key => {
+          const fullKey = prefix ? `${prefix}.${key}` : key;
+          keys.push(fullKey);
+          if (obj[key] && typeof obj[key] === 'object') {
+            const nestedKeys = extractKeys(obj[key], fullKey);
+            keys = [...keys, ...nestedKeys];
+          }
+        });
+      }
+    }
+    
+    return keys;
+  }
+
+  // Update available keys when input changes
+  function updateAvailableKeys() {
+    if (!inputText.trim()) {
+      availableKeys = [];
+      return;
+    }
+
+    try {
+      let parsed;
+      try {
+        parsed = JSON.parse(inputText);
+      } catch (e) {
+        parsed = parseJsonString(inputText);
+      }
+      availableKeys = extractKeys(parsed);
+    } catch (e) {
+      availableKeys = [];
+    }
+  }
+
+  // Handle key input and show suggestions
+  function handleKeyInput(event) {
+    const input = event.target.value;
+    const cursorPos = event.target.selectionStart;
+    
+    // Get the current segment being typed (after last comma)
+    const beforeCursor = input.substring(0, cursorPos);
+    const lastCommaIndex = beforeCursor.lastIndexOf(',');
+    const currentSegment = beforeCursor.substring(lastCommaIndex + 1).trim();
+    
+    if (currentSegment && availableKeys.length > 0) {
+      // Filter suggestions based on current segment
+      filteredSuggestions = availableKeys.filter(key => 
+        key.toLowerCase().includes(currentSegment.toLowerCase())
+      );
+      
+      showSuggestions = filteredSuggestions.length > 0;
+      selectedSuggestionIndex = 0;
+    } else if (!currentSegment && availableKeys.length > 0) {
+      // Show all suggestions when input is empty or just after comma
+      filteredSuggestions = availableKeys;
+      showSuggestions = true;
+      selectedSuggestionIndex = 0;
+    } else {
+      showSuggestions = false;
+    }
+  }
+
+  // Handle keyboard navigation in suggestions
+  function handleKeyDown(event) {
+    if (!showSuggestions) return;
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, filteredSuggestions.length - 1);
+      scrollToSelectedSuggestion();
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+      scrollToSelectedSuggestion();
+    } else if (event.key === 'Enter' && showSuggestions) {
+      event.preventDefault();
+      selectSuggestion(filteredSuggestions[selectedSuggestionIndex]);
+    } else if (event.key === 'Escape') {
+      showSuggestions = false;
+    }
+  }
+
+  function scrollToSelectedSuggestion() {
+    if (suggestionsContainer) {
+      const selectedElement = suggestionsContainer.children[selectedSuggestionIndex];
+      if (selectedElement) {
+        selectedElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+  }
+
+  // Select a suggestion
+  function selectSuggestion(suggestion) {
+    const cursorPos = keysInput.selectionStart;
+    const beforeCursor = keysToParse.substring(0, cursorPos);
+    const afterCursor = keysToParse.substring(cursorPos);
+    
+    // Find the last comma position
+    const lastCommaIndex = beforeCursor.lastIndexOf(',');
+    
+    if (lastCommaIndex >= 0) {
+      // Replace the segment after the last comma
+      keysToParse = beforeCursor.substring(0, lastCommaIndex + 1) + suggestion + afterCursor;
+    } else {
+      // Replace entire input if no comma
+      keysToParse = suggestion + afterCursor;
+    }
+    
+    showSuggestions = false;
+    keysInput.focus();
+  }
+
+  // Close suggestions when clicking outside
+  function handleClickOutside(event) {
+    if (keysInput && !keysInput.contains(event.target) && 
+        suggestionsContainer && !suggestionsContainer.contains(event.target)) {
+      showSuggestions = false;
+    }
+  }
+
   // Auto process when inputs change
   $: if (inputText || keysToParse !== undefined) {
     processJson();
   }
+
+  // Update available keys when input text changes
+  $: if (inputText) {
+    updateAvailableKeys();
+  }
 </script>
+
+<svelte:window on:click={handleClickOutside} />
 
 <div class="h-full flex flex-col overflow-hidden">
   <!-- Header -->
@@ -252,7 +407,7 @@
     <div class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 flex flex-col overflow-hidden">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex-shrink-0">Input</h2>
       <div class="flex-1 flex flex-col space-y-3 overflow-hidden">
-      <div class="flex-1 flex flex-col overflow-hidden">
+      <div class="flex flex-col" style="height: 35%;">
         <label for="input-text" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex-shrink-0">
           Input JSON Text
         </label>
@@ -266,7 +421,7 @@
         {/if}
       </div>
 
-        <div class="flex-shrink-0">
+        <div class="flex-shrink-0 relative">
           <label for="keys-to-parse" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Keys to Parse (optional)
           </label>
@@ -274,11 +429,38 @@
             id="keys-to-parse"
             type="text"
             bind:value={keysToParse}
-            placeholder="data,[0],value"
+            bind:this={keysInput}
+            on:input={handleKeyInput}
+            on:keydown={handleKeyDown}
+            on:focus={handleKeyInput}
+            placeholder="data.[0].value"
+            autocomplete="off"
             class="w-full px-3 py-2 bg-gray-50 dark:bg-[#0a0a0a] border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors font-mono text-xs"
           />
+          
+          <!-- Autocomplete Suggestions -->
+          {#if showSuggestions && filteredSuggestions.length > 0}
+            <div 
+              bind:this={suggestionsContainer}
+              class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto"
+            >
+              {#each filteredSuggestions as suggestion, index}
+                <button
+                  type="button"
+                  on:click={() => selectSuggestion(suggestion)}
+                  class="w-full text-left px-3 py-1.5 text-xs font-mono hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors {index === selectedSuggestionIndex ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100' : 'text-gray-900 dark:text-gray-100'}"
+                >
+                  {suggestion}
+                </button>
+              {/each}
+            </div>
+          {/if}
+          
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
-            Ex: <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">data,[0],value</code>
+            Ex: <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">data.[0].value</code>
+            {#if availableKeys.length > 0}
+              <span class="text-green-600 dark:text-green-400">• {availableKeys.length} keys available</span>
+            {/if}
           </p>
         </div>
 
