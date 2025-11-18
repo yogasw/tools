@@ -56,7 +56,6 @@ src/
 │   │   └── ToolCard.svelte
 │   ├── tools/           # Tool modules (each tool is a Svelte component)
 │   │   ├── Base64Tool.svelte
-│   │   ├── CameraMicTest.svelte
 │   │   └── WhatsAppLinkGenerator.svelte
 │   ├── stores/          # Svelte stores for state management
 │   │   ├── theme.js     # Theme management (dark/light mode)
