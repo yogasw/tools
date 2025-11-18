@@ -12,9 +12,9 @@ export const toolsRegistry = [
     category: 'encoding'
   },
   {
-    id: 'wa-link-generator',
-    name: 'WhatsApp Link Generator',
-    description: 'Generate WhatsApp click-to-chat links',
+    id: 'wame-link-generator',
+    name: 'WhatsApp Link Generator (wa.me)',
+    description: 'Generate wa.me WhatsApp click-to-chat links',
     icon: '💬',
     type: 'internal',
     category: 'generator'
@@ -27,6 +27,31 @@ export const toolsRegistry = [
     type: 'external',
     url: 'https://yogasw.my.id/test-permission-camera-and-mic/',
     category: 'media'
+  },
+  {
+    id: 'date-time-diff',
+    name: 'Date Time Difference',
+    description: 'Calculate the difference between two dates and times',
+    icon: '⏱️',
+    type: 'internal',
+    category: 'calculator'
+  },
+  {
+    id: 'json-parser',
+    name: 'JSON Parser',
+    description: 'Parse JSON from multiple formats and extract specific keys',
+    icon: '🔍',
+    type: 'internal',
+    category: 'parser'
+  },
+  {
+    id: 'beo-echo',
+    name: 'Beo echo',
+    description: 'Beo echo is api mocking tools for testing and development',
+    icon: 'https://beo-echo.xyz/favicon.svg',
+    type: 'external',
+    url: 'https://beo-echo.xyz/',
+    category: 'testing'
   }
 ];
 

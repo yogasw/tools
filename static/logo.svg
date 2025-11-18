@@ -1,0 +1,13 @@
+<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg" fill="none">
+ <defs>
+  <linearGradient y2="100%" x2="100%" y1="0%" x1="0%" id="grad1">
+   <stop stop-color="#ec4899" offset="0%"/>
+   <stop stop-color="#ef4444" offset="100%"/>
+  </linearGradient>
+ </defs>
+ <g>
+  <title>Layer 1</title>
+  <rect id="svg_1" fill="url(#grad1)" rx="16" height="80" width="80"/>
+  <text transform="matrix(1 0 0 1 0 0)" stroke="null" id="svg_2" fill="#FFFFFF" font-size="36" text-anchor="middle" dominant-baseline="middle" y="44.48006" x="39.82759">🛠️</text>
+ </g>
+</svg>
