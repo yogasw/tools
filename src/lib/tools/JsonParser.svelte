@@ -414,7 +414,7 @@
 
 <div class="h-full flex flex-col overflow-hidden">
   <!-- Header -->
-  <div class="flex-shrink-0 border-b border-gray-200 dark:border-gray-800">
+  <div class="flex-shrink-0 dark:border-gray-800">
     <div class="flex items-center justify-between px-4 py-3">
       <div class="flex-1">
         <h1
@@ -452,7 +452,7 @@
     <!-- Collapsible Formats Info -->
     {#if showFormatsInfo}
       <div
-        class="px-4 pb-3 border-t border-gray-200 dark:border-gray-800 bg-blue-50/50 dark:bg-blue-900/10"
+        class="px-4 pb-3 bg-blue-50/50 dark:bg-blue-900/10"
       >
         <div class="grid grid-cols-3 gap-3 mt-3">
           <div
