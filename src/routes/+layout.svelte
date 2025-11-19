@@ -41,15 +41,16 @@
     searchModal.close();
   }
 
-  function handleToolClick(tool) {
+  function handleExternalClick(e, tool) {
+    e.preventDefault();
     closeSearchModal();
+    recentTools.addRecent(tool.id);
+    window.open(tool.url, "_blank");
+  }
 
-    if (tool.type === "external") {
-      recentTools.addRecent(tool.id);
-      window.open(tool.url, "_blank");
-    } else {
-      window.location.href = `/${tool.id}`;
-    }
+  function handleInternalClick(e, tool) {
+    closeSearchModal();
+    recentTools.addRecent(tool.id);
   }
 
   function handleKeyDown(e) {
@@ -162,7 +163,7 @@
           class="flex items-center space-x-2 hover:opacity-70 transition-opacity"
         >
           <span class="text-xl">🛠️</span>
-          <h1 class="text-lg font-bold text-gray-900 dark:text-white">Dev Utilities</h1>
+            <span class="text-lg font-bold text-gray-900 dark:text-white">Dev Utilities</span>
         </a>
 
         <!-- Right Actions -->
@@ -271,14 +272,17 @@
             </div>
             <div class="space-y-1">
               {#each filteredAndSortedTools as tool, index}
-                <button
+                <a
                   bind:this={toolButtons[index]}
-                  on:click={() => handleToolClick(tool)}
+                  href={tool.type === "external" ? tool.url : `/${tool.id}`}
+                  target={tool.type === "external" ? "_blank" : undefined}
+                  rel={tool.type === "external" ? "noopener noreferrer" : undefined}
+                  on:click={(e) => tool.type === "external" ? handleExternalClick(e, tool) : handleInternalClick(e, tool)}
                   on:mouseenter={() => (selectedIndex = index)}
                   class="w-full text-left px-3 py-2 rounded transition-colors flex items-center gap-3 group {index ===
                   selectedIndex
                     ? 'bg-gray-100 dark:bg-gray-800/70'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'}"
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'} block no-underline"
                 >
                   {#if tool.icon.startsWith("http://") || tool.icon.startsWith("https://") || tool.icon.startsWith("/")}
                 <img
@@ -330,7 +334,7 @@
                       {/if}
                     </div>
                   </div>
-                </button>
+                </a>
               {/each}
             </div>
           </div>

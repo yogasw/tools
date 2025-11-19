@@ -1,0 +1,6 @@
+# robots.txt for Dev Utilities
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://tools.yogasw.my.id/sitemap.xml

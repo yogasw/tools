@@ -2,17 +2,29 @@
   import { onMount } from 'svelte';
   import DateTimeDiff from '$lib/tools/DateTimeDiff.svelte';
   import { recentTools } from '$lib/stores/recent.js';
+  import { toolsRegistry } from '$lib/stores/tools.js';
+  import SEO from '$lib/components/SEO.svelte';
+  import { generateToolSEO, generateToolSchema, generateBreadcrumbSchema } from '$lib/utils/seo.js';
+
+  const tool = toolsRegistry.find(t => t.id === 'date-time-diff');
+  const seoData = generateToolSEO(tool);
 
   onMount(() => {
     recentTools.addRecent('date-time-diff');
   });
 </script>
 
-<svelte:head>
-  <title>Date Time Difference Calculator - Tools Collection</title>
-  <meta name="description" content="Calculate the precise difference between two dates and times. Get results in years, months, days, hours, minutes, and seconds." />
-  <meta name="keywords" content="date difference, time difference, date calculator, duration calculator, time calculator, date time diff" />
-</svelte:head>
+<SEO
+  title={seoData.title}
+  description={seoData.description}
+  keywords={seoData.keywords}
+  canonical={seoData.canonical}
+  ogTitle={seoData.ogTitle}
+  ogDescription={seoData.ogDescription}
+  ogImage={seoData.ogImage}
+  ogUrl={seoData.ogUrl}
+  schema={`[${generateToolSchema(tool)},${generateBreadcrumbSchema(tool)}]`}
+/>
 
 <div class="py-8">
   <DateTimeDiff />
