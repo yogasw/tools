@@ -124,11 +124,27 @@
             break;
           }
         }
+
+        //handle stringified JSON at each step
+        if (typeof current === "string") {
+          let oldCurrent = current;
+          try {
+            current = JSON.parse(current);
+          } catch (e) {
+            current = oldCurrent;
+          }
+        }
       }
 
       // Handle result
+      let result;
       if (current === undefined) {
-        return JSON.stringify(parsedInput, null, 2);
+        result = parsedInput;
+      }
+
+      result = current;
+      if (typeof result === "string") {
+        return result;
       }
 
       return JSON.stringify(current, null, 2);
@@ -243,6 +259,13 @@
           if (obj[key] && typeof obj[key] === "object") {
             const nestedKeys = extractKeys(obj[key], fullKey);
             keys = [...keys, ...nestedKeys];
+          } else if (typeof obj[key] === "string") {
+            // try to parse stringified JSON
+            try {
+              const parsedString = JSON.parse(obj[key]);
+              const nestedKeys = extractKeys(parsedString, fullKey);
+              keys = [...keys, ...nestedKeys];
+            } catch (e) {}
           }
         });
       }
@@ -262,6 +285,11 @@
       let parsed;
       try {
         parsed = JSON.parse(inputText);
+        if (typeof parsed === "string") {
+          try {
+            parsed = parseJsonString(parsed);
+          } catch (e) {}
+        }
       } catch (e) {
         parsed = parseJsonString(inputText);
       }
