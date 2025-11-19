@@ -1,8 +1,10 @@
 <script>
   import { onMount } from "svelte";
-  import { tools } from "$lib/stores/tools.js";
   import { recentTools } from "$lib/stores/recent.js";
   import { bookmarks } from "$lib/stores/bookmarks.js";
+  import SEO from "$lib/components/SEO.svelte";
+  import { generateHomepageSchema } from "$lib/utils/seo.js";
+  import { tools, homepageSEO } from "$lib/stores/tools.js";
 
   let isMac = false;
 
@@ -10,16 +12,14 @@
     isMac = navigator.userAgent.indexOf("Mac") !== -1;
   });
 
-  function handleToolClick(tool) {
-    if (tool.type === "external") {
-      recentTools.addRecent(tool.id);
-      window.open(tool.url, "_blank");
-    } else {
-      window.location.href = `/${tool.id}`;
-    }
+  function handleExternalClick(e, tool) {
+    e.preventDefault();
+    recentTools.addRecent(tool.id);
+    window.open(tool.url, "_blank");
   }
 
   function toggleBookmark(e, toolId) {
+    e.preventDefault();
     e.stopPropagation();
     bookmarks.toggle(toolId);
   }
@@ -52,13 +52,17 @@
   });
 </script>
 
-<svelte:head>
-  <title>Dev Tools Utilities</title>
-  <meta
-    name="description"
-    content="Simple and modern collection of useful web tools. Base64 encoder/decoder, camera & mic test, WhatsApp link generator, and more."
-  />
-</svelte:head>
+<SEO
+  title={homepageSEO.title}
+  description={homepageSEO.description}
+  keywords={homepageSEO.keywords.join(', ')}
+  canonical={homepageSEO.canonical}
+  ogTitle={homepageSEO.ogTitle}
+  ogDescription={homepageSEO.ogDescription}
+  ogImage={homepageSEO.ogImage}
+  ogUrl={homepageSEO.canonical}
+  schema={generateHomepageSchema()}
+/>
 
 <!-- Home: Hero + Search + Tools Grid -->
 <div class="py-16 space-y-12">
@@ -66,21 +70,21 @@
   <div class="text-center space-y-6">
     <!-- Icon -->
     <div class="flex justify-center">
-      <img src="/logo.svg" alt="logo" class="w-20 h-20" />
+      <img src="/logo.svg" alt="Dev Utilities - Free Developer Tools Collection" class="w-20 h-20" />
     </div>
 
-    <!-- Title -->
+    <!-- Title - Only ONE H1 tag -->
     <h1 class="text-5xl font-bold text-gray-900 dark:text-white">
-      Dev Utilities
+      Free Developer Tools & Utilities
     </h1>
 
-    <!-- Subtitle -->
+    <!-- Subtitle with H2 for SEO -->
     <div class="space-y-1">
+      <h2 class="text-lg text-gray-600 dark:text-gray-400 font-normal">
+        Fast, free, open source, and ad-free developer tools to make your work easier.
+      </h2>
       <p class="text-lg text-gray-600 dark:text-gray-400">
-        Tools exists to make developers lives easier.
-      </p>
-      <p class="text-lg text-gray-600 dark:text-gray-400">
-        Here are fast, free, open source, ad-free tools.
+        Base64 encoder, JSON parser, WhatsApp link generator, date calculator, and more.
       </p>
     </div>
 
@@ -114,15 +118,17 @@
     </div>
   </div>
 
-  <!-- Tools Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <!-- Tools Grid with H2 for SEO (visually minimal) -->
+  <div>
+    <h2 class="sr-only">Available Developer Tools</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {#each filteredAndSortedTools as tool}
-      <div
-        on:click={() => handleToolClick(tool)}
-        on:keydown={(e) => e.key === "Enter" && handleToolClick(tool)}
-        tabindex="0"
-        role="button"
-        class="group relative text-left p-6 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200 cursor-pointer"
+      <a
+        href={tool.type === "external" ? tool.url : `/${tool.id}`}
+        target={tool.type === "external" ? "_blank" : undefined}
+        rel={tool.type === "external" ? "noopener noreferrer" : undefined}
+        on:click={(e) => tool.type === "external" && handleExternalClick(e, tool)}
+        class="group relative block text-left p-6 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg hover:border-gray-400 dark:hover:border-gray-600 hover:shadow-md transition-all duration-200"
       >
         <!-- Bookmark Button -->
         <button
@@ -215,7 +221,8 @@
             {tool.description}
           </p>
         </div>
-      </div>
+      </a>
     {/each}
+    </div>
   </div>
 </div>
