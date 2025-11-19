@@ -1,5 +1,8 @@
 import { toolsRegistry } from '$lib/stores/tools.js';
 
+// Enable prerendering for static hosting (GitHub Pages, etc)
+export const prerender = true;
+
 /**
  * Generate dynamic sitemap.xml from toolsRegistry
  * This automatically updates when new tools are added
