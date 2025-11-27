@@ -236,6 +236,33 @@
     }
   }
 
+  // Get preview of a value (first 15 chars)
+  function getValuePreview(value) {
+    let preview = "";
+
+    if (value === null) {
+      preview = "null";
+    } else if (value === undefined) {
+      preview = "undefined";
+    } else if (typeof value === "string") {
+      preview = value;
+    } else if (typeof value === "number" || typeof value === "boolean") {
+      preview = String(value);
+    } else if (Array.isArray(value)) {
+      preview = `[${value.length} items]`;
+    } else if (typeof value === "object") {
+      preview = `{${Object.keys(value).length} keys}`;
+    } else {
+      preview = String(value);
+    }
+
+    if (preview.length > 15) {
+      preview = preview.substring(0, 15) + "...";
+    }
+
+    return preview;
+  }
+
   // Extract all keys from JSON object
   function extractKeys(obj, prefix = "") {
     let keys = [];
@@ -245,7 +272,10 @@
         // For arrays, add index notation without dot prefix
         obj.forEach((item, index) => {
           const indexKey = `${prefix}[${index}]`;
-          keys.push(indexKey);
+          keys.push({
+            key: indexKey,
+            preview: getValuePreview(item)
+          });
           if (item && typeof item === "object") {
             const nestedKeys = extractKeys(item, indexKey);
             keys = [...keys, ...nestedKeys];
@@ -255,7 +285,10 @@
         // For objects, add key names
         Object.keys(obj).forEach((key) => {
           const fullKey = prefix ? `${prefix}.${key}` : key;
-          keys.push(fullKey);
+          keys.push({
+            key: fullKey,
+            preview: getValuePreview(obj[key])
+          });
           if (obj[key] && typeof obj[key] === "object") {
             const nestedKeys = extractKeys(obj[key], fullKey);
             keys = [...keys, ...nestedKeys];
@@ -310,10 +343,18 @@
     const currentSegment = beforeCursor.substring(lastCommaIndex + 1).trim();
 
     if (currentSegment && availableKeys.length > 0) {
-      // Filter suggestions based on current segment
-      filteredSuggestions = availableKeys.filter((key) =>
-        key.toLowerCase().includes(currentSegment.toLowerCase()),
-      );
+      // Split search terms by space
+      const searchTerms = currentSegment.toLowerCase().split(/\s+/).filter(term => term.length > 0);
+
+      // Filter suggestions: all search terms must match in key or preview
+      filteredSuggestions = availableKeys.filter((item) => {
+        const keyLower = item.key.toLowerCase();
+        const previewLower = item.preview.toLowerCase();
+        const combined = keyLower + " " + previewLower;
+
+        // All search terms must be found
+        return searchTerms.every(term => combined.includes(term));
+      });
 
       showSuggestions = filteredSuggestions.length > 0;
       selectedSuggestionIndex = 0;
@@ -372,15 +413,17 @@
     // Find the last comma position
     const lastCommaIndex = beforeCursor.lastIndexOf(",");
 
+    const keyToInsert = typeof suggestion === 'string' ? suggestion : suggestion.key;
+
     if (lastCommaIndex >= 0) {
       // Replace the segment after the last comma
       keysToParse =
         beforeCursor.substring(0, lastCommaIndex + 1) +
-        suggestion +
+        keyToInsert +
         afterCursor;
     } else {
       // Replace entire input if no comma
-      keysToParse = suggestion + afterCursor;
+      keysToParse = keyToInsert + afterCursor;
     }
 
     showSuggestions = false;
@@ -562,9 +605,12 @@
                   class="w-full text-left px-3 py-1.5 text-xs font-mono hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors {index ===
                   selectedSuggestionIndex
                     ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-900 dark:text-blue-100'
-                    : 'text-gray-900 dark:text-gray-100'}"
+                    : 'text-gray-900 dark:text-gray-100'} flex justify-between items-center gap-2"
                 >
-                  {suggestion}
+                  <span class="flex-shrink-0">{suggestion.key}</span>
+                  <span class="text-gray-500 dark:text-gray-400 text-[10px] flex-shrink truncate">
+                    {suggestion.preview}
+                  </span>
                 </button>
               {/each}
             </div>
