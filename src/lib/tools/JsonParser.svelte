@@ -236,7 +236,7 @@
     }
   }
 
-  // Get preview of a value (first 15 chars)
+  // Get preview of a value (first 20 chars)
   function getValuePreview(value) {
     let preview = "";
 
@@ -256,8 +256,8 @@
       preview = String(value);
     }
 
-    if (preview.length > 15) {
-      preview = preview.substring(0, 15) + "...";
+    if (preview.length > 20) {
+      preview = preview.substring(0, 20) + "...";
     }
 
     return preview;
