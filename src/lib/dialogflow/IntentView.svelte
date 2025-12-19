@@ -2,6 +2,7 @@
   import { allIntents, intentViewMode } from '$lib/dialogflow/dialogflow-store.js';
   import { fetchAllIntents, buildIntentTree } from '$lib/dialogflow/dialogflow-api.js';
   import IntentTreeNode from './IntentTreeNode.svelte';
+  import IntentDetailPanel from './IntentDetailPanel.svelte';
   import { tick } from 'svelte';
   
   export let sessionData = null; // Full session data (with interactions)
@@ -164,6 +165,102 @@
   $: if (searchMode === 'standard' && searchQuery !== undefined) {
     performSearch();
   }
+
+  // Selection (Detail View)
+  let selectedNode = null;
+
+  function handleNodeSelect(e) {
+    selectedNode = e.detail;
+  }
+
+  // Clear selection when view mode changes or search performed
+  $: if ($intentViewMode) selectedNode = null;
+
+  // -- PERSISTENT CHECKLIST --
+  import { browser } from '$app/environment';
+  let checkedIntents = new Set();
+  let showChecklist = false;
+
+  // Load from localStorage
+  if (browser) {
+    try {
+      const stored = localStorage.getItem('dialogflow_checked_intents');
+      if (stored) {
+        checkedIntents = new Set(JSON.parse(stored));
+      }
+    } catch (e) {
+      console.warn('Failed to load checked intents', e);
+    }
+  }
+
+  // Sync tree with checked state
+  $: if (currentTree && checkedIntents) {
+    syncCheckedState(currentTree.roots);
+    currentTree = { ...currentTree }; // Trigger update
+  }
+
+  function syncCheckedState(nodes) {
+    nodes.forEach(node => {
+      node.selected = checkedIntents.has(node.id);
+      if (node.children) syncCheckedState(node.children);
+    });
+  }
+
+  function handleNodeCheck(e) {
+    const node = e.detail;
+    if (checkedIntents.has(node.id)) {
+      checkedIntents.delete(node.id);
+    } else {
+      checkedIntents.add(node.id);
+    }
+    checkedIntents = new Set(checkedIntents); // Reactivity
+    saveCheckedIntents();
+    
+    // Update local node state immediately for responsiveness
+    node.selected = checkedIntents.has(node.id);
+    currentTree = { ...currentTree };
+  }
+
+  function saveCheckedIntents() {
+    if (browser) {
+      localStorage.setItem('dialogflow_checked_intents', JSON.stringify([...checkedIntents]));
+    }
+  }
+
+  function resetChecklist() {
+    checkedIntents = new Set();
+    saveCheckedIntents();
+    showChecklist = false;
+  }
+  
+  function jumpToIntent(id) {
+    clearHighlights(currentTree.roots);
+    highlightNode(currentTree.roots, id);
+    currentTree = { ...currentTree };
+    
+    // Select it for detail view
+    const node = findNodeById(currentTree.roots, id);
+    if (node) selectedNode = node;
+    
+    tick().then(() => {
+      const element = document.getElementById(`node-${id}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    });
+    showChecklist = false;
+  }
+
+  function findNodeById(nodes, id) {
+    for (const node of nodes) {
+      if (node.id === id) return node;
+      if (node.children) {
+        const found = findNodeById(node.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  }
 </script>
 
 <div class="h-full flex flex-col overflow-hidden relative">
@@ -250,30 +347,77 @@
         </div>
     {/if}
 
+    <!-- Checklist Counter UI -->
+    {#if checkedIntents.size > 0}
+      <div class="absolute top-16 right-4 z-50">
+        <div class="relative">
+          <button 
+            on:click={() => showChecklist = !showChecklist}
+            class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium text-gray-700 dark:text-gray-200 group"
+          >
+            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span>{checkedIntents.size} Selected</span>
+            <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-transform {showChecklist ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+          </button>
+          
+          {#if showChecklist}
+            <div class="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2">
+              <div class="p-2 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
+                <span class="text-xs font-bold text-gray-500 uppercase">Checked Intents</span>
+                <button on:click={resetChecklist} class="text-xs text-red-500 hover:text-red-600 font-medium px-2 py-0.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                  Reset
+                </button>
+              </div>
+              <div class="max-h-60 overflow-y-auto p-1">
+                {#each [...checkedIntents] as id}
+                  {@const node = findNodeById(currentTree.roots, id)}
+                  <button 
+                    on:click={() => jumpToIntent(id)}
+                    class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center justify-between group"
+                  >
+                    <span class="truncate text-gray-700 dark:text-gray-300">{node ? node.displayName : id}</span>
+                    <svg class="w-3.5 h-3.5 text-gray-400 opacity-0 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                  </button>
+                {/each}
+              </div>
+            </div>
+          {/if}
+        </div>
+      </div>
+    {/if}
+
   </div>
   
-  <!-- Content Area with Zoom -->
-  <div class="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0a0a] relative">
-      <div 
-        class="min-w-full min-h-full p-8 transition-transform duration-200 origin-top-left"
-        style="transform: scale({scale}); width: {100/scale}%; height: {100/scale}%;"
-      >
-        {#if $allIntents.length === 0}
-            <div class="flex flex-col items-center justify-center py-20 text-gray-400">
-                <p>Loading intents...</p>
-                <button on:click={() => fetchAllIntents()} class="mt-4 text-blue-500 hover:underline">Retry</button>
+  <div class="flex-1 flex overflow-hidden">
+    <!-- Content Area with Zoom -->
+    <div class="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0a0a] relative">
+        <div 
+          class="min-w-full min-h-full p-8 transition-transform duration-200 origin-top-left"
+          style="transform: scale({scale}); width: {100/scale}%; height: {100/scale}%;"
+          on:click={() => selectedNode = null}
+        >
+          {#if $allIntents.length === 0}
+              <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+                  <p>Loading intents...</p>
+                  <button on:click={() => fetchAllIntents()} class="mt-4 text-blue-500 hover:underline">Retry</button>
+              </div>
+          {:else if currentTree && currentTree.roots.length > 0}
+            <div class="flex flex-row flex-wrap gap-8 justify-center items-start min-w-max pb-20">
+              {#each currentTree.roots as root}
+                <IntentTreeNode node={root} on:select={handleNodeSelect} on:check={handleNodeCheck} />
+              {/each}
             </div>
-        {:else if currentTree && currentTree.roots.length > 0}
-          <div class="flex flex-row flex-wrap gap-8 justify-center items-start min-w-max pb-20">
-            {#each currentTree.roots as root}
-              <IntentTreeNode node={root} />
-            {/each}
-          </div>
-        {:else}
-          <div class="text-center text-gray-500 py-8">
-            <p class="text-sm">No intents to display</p>
-          </div>
-        {/if}
-      </div>
+          {:else}
+            <div class="text-center text-gray-500 py-8">
+              <p class="text-sm">No intents to display</p>
+            </div>
+          {/if}
+        </div>
+    </div>
+    
+    <!-- Right Sidebar Detail Panel -->
+    {#if selectedNode}
+      <IntentDetailPanel node={selectedNode} />
+    {/if}
   </div>
 </div>

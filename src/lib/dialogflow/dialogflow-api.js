@@ -65,6 +65,25 @@ export function buildIntentsUrl(parsedUrl) {
 }
 
 /**
+ * Generate Dialogflow Console URL for an intent
+ */
+export function getConsoleUrl(name) {
+  if (!name) return '#';
+  try {
+    // Extract Project and Intent ID
+    const projectMatch = name.match(/projects\/([^\/]+)/);
+    const intentId = name.split('/').pop();
+    
+    if (projectMatch && intentId) {
+      return `https://dialogflow.cloud.google.com/#/agent/${projectMatch[1]}/intent/${intentId}/`;
+    }
+  } catch (e) {
+    console.warn('Error building console URL:', e);
+  }
+  return '#';
+}
+
+/**
  * Build headers for the Dialogflow API request
  */
 function buildHeaders() {
@@ -231,7 +250,10 @@ export async function fetchAllIntents() {
         : null,
       isFallback: intent.isFallback || false,
       inputContexts: intent.inputContextNames || [],
-      outputContexts: intent.outputContexts?.map(c => c.name) || [],
+      outputContexts: intent.outputContexts?.map(c => ({
+        name: c.name,
+        lifespanCount: c.lifespanCount
+      })) || [],
       events: intent.events || [],
       trainingPhrases: intent.trainingPhrases?.length || 0,
       priority: intent.priority || 0,
@@ -311,6 +333,11 @@ export function buildIntentTree(allIntentsList, sessionData, summaryOnly = false
     
     const node = {
       id: intentId,
+      name: intent.name, // Full resource name for linking
+      action: intent.action || '',
+      inputContexts: intent.inputContexts || [],
+      outputContexts: intent.outputContexts || [],
+      events: intent.events || [],
       displayName: intent.displayName,
       isFallback: intent.isFallback || false,
       parentId: parentId,

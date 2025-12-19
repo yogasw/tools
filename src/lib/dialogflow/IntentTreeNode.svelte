@@ -1,5 +1,10 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
+  import { getConsoleUrl } from '$lib/dialogflow/dialogflow-api.js';
+  
   export let node;
+  
+  const dispatch = createEventDispatcher();
   
   $: visibleChildren = node.children || [];
   $: hasMultipleChildren = visibleChildren.length > 1;
@@ -9,6 +14,18 @@
   // A connection segment is active if it leads to an active node
   function isChildActive(child) {
     return child.active;
+  }
+  
+  function startSelection(e) {
+    e.stopPropagation();
+    // Dispatch check event to parent to handle state
+    dispatch('check', node);
+  }
+
+  function handleClick(e) {
+    e.stopPropagation();
+    // Only dispatch select for detail view, DO NOT toggle node.selected
+    dispatch('select', node);
   }
 </script>
 
@@ -49,6 +66,7 @@
   .line-inactive {
     border-color: #d1d5db; /* gray-300 */
     border-style: solid;
+    animation: none !important;
   }
   
   @keyframes march {
@@ -88,10 +106,10 @@
   <!-- Node box -->
   <div 
     id="node-{node.id}"
-    on:click={() => node.selected = !node.selected} 
+    on:click={handleClick} 
     role="button"
     tabindex="0"
-    on:keypress={(e) => e.key === 'Enter' && (node.selected = !node.selected)}
+    on:keypress={(e) => e.key === 'Enter' && handleClick(e)}
     class="px-3 py-1.5 rounded-lg border-2 text-xs font-medium whitespace-nowrap z-20 transition-all duration-200 cursor-pointer select-none
     bg-white dark:bg-gray-800
     {node.highlighted ? 'node-highlight scale-105' : ''}
@@ -99,10 +117,10 @@
       ? 'border-yellow-400 dark:border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' 
       : node.active 
         ? 'border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-700'
-        : 'border-gray-200 dark:border-gray-700'}">
+        : 'border-gray-200 dark:border-gray-700'} group">
     
     <div class="flex items-center gap-1.5">
-      <!-- Check mark selection indicator -->
+      <!-- Check mark selection indicator (Always visible if selected) -->
       {#if node.selected}
         <span class="text-green-500 dark:text-green-400 font-bold text-sm">✓</span>
       {/if}
@@ -118,6 +136,29 @@
           ({node.history})
         </span>
       {/if}
+
+      <!-- Hover Actions (Expand on Hover) -->
+      <div class="flex items-center gap-1 overflow-hidden transition-all duration-300 ease-in-out max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100 group-hover:ml-2 group-hover:pl-2 group-hover:border-l border-gray-200 dark:border-gray-600">
+        <!-- Toggle Select -->
+        <button 
+            on:click|stopPropagation={startSelection}
+            class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400 hover:text-green-500 transition-colors"
+            title="Toggle Selection"
+        >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+        </button>
+        
+        <!-- Goto Dialogflow -->
+        <a 
+            href={getConsoleUrl(node.name)} 
+            target="_blank"
+            on:click|stopPropagation 
+            class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400 hover:text-blue-500 transition-colors"
+            title="Open in Dialogflow"
+        >
+             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+        </a>
+      </div>
     </div>
   </div>
   
@@ -183,14 +224,14 @@
             <!-- Spacer for the connector height -->
             <div class="h-2"></div>
             
-            <svelte:self node={child} />
+            <svelte:self node={child} on:select on:check />
           </div>
         {/each}
       </div>
     {:else}
       <!-- Single child - just vertical line -->
       <div class="w-0.5 h-3 {visibleChildren[0]?.active ? 'connector-v-animated' : 'connector-v-static'}"></div>
-      <svelte:self node={visibleChildren[0]} />
+      <svelte:self node={visibleChildren[0]} on:select on:check />
     {/if}
   {/if}
 </div>
