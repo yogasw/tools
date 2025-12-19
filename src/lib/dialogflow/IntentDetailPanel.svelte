@@ -10,10 +10,10 @@
    * @property {any[]} [events]
    */
 
-  /** @type {IntentNode} */
-  export let node = null;
-  
   import { getConsoleUrl } from '$lib/dialogflow/dialogflow-api.js';
+
+  /** @type {{ node: IntentNode | null }} */
+  let { node = null } = $props();
 
   function getContextDisplay(ctx) {
     if (typeof ctx === 'string') {

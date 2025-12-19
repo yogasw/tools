@@ -1,14 +1,11 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
   import { getConsoleUrl } from '$lib/dialogflow/dialogflow-api.js';
   
-  export let node;
+  let { node, onselect, oncheck } = $props();
   
-  const dispatch = createEventDispatcher();
-  
-  $: visibleChildren = node.children || [];
-  $: hasMultipleChildren = visibleChildren.length > 1;
-  $: hasActiveChild = visibleChildren.some(child => child.active);
+  let visibleChildren = $derived(node.children || []);
+  let hasMultipleChildren = $derived(visibleChildren.length > 1);
+  let hasActiveChild = $derived(visibleChildren.some(child => child.active));
 
   // Helper to determine if a connection should be active (pink/solid) or inactive (gray/dashed)
   // A connection segment is active if it leads to an active node
@@ -19,13 +16,17 @@
   function startSelection(e) {
     e.stopPropagation();
     // Dispatch check event to parent to handle state
-    dispatch('check', node);
+    oncheck?.(node);
   }
 
   function handleClick(e) {
     e.stopPropagation();
     // Only dispatch select for detail view, DO NOT toggle node.selected
-    dispatch('select', node);
+    onselect?.(node);
+  }
+  
+  function handleKeypress(e) {
+    if (e.key === 'Enter') handleClick(e);
   }
 </script>
 
@@ -106,10 +107,10 @@
   <!-- Node box -->
   <div 
     id="node-{node.id}"
-    on:click={handleClick} 
+    onclick={handleClick} 
     role="button"
     tabindex="0"
-    on:keypress={(e) => e.key === 'Enter' && handleClick(e)}
+    onkeypress={handleKeypress}
     class="px-3 py-1.5 rounded-lg border-2 text-xs font-medium whitespace-nowrap z-20 transition-all duration-200 cursor-pointer select-none
     bg-white dark:bg-gray-800
     {node.highlighted ? 'node-highlight scale-105' : ''}
@@ -141,7 +142,7 @@
       <div class="flex items-center gap-1 overflow-hidden transition-all duration-300 ease-in-out max-w-0 opacity-0 group-hover:max-w-[100px] group-hover:opacity-100 group-hover:ml-2 group-hover:pl-2 group-hover:border-l border-gray-200 dark:border-gray-600">
         <!-- Toggle Select -->
         <button 
-            on:click|stopPropagation={startSelection}
+            onclick={startSelection}
             class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400 hover:text-green-500 transition-colors"
             title="Toggle Selection"
         >
@@ -152,7 +153,7 @@
         <a 
             href={getConsoleUrl(node.name)} 
             target="_blank"
-            on:click|stopPropagation 
+            onclick={(e) => e.stopPropagation()} 
             class="p-0.5 rounded hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-400 hover:text-blue-500 transition-colors"
             title="Open in Dialogflow"
         >
@@ -224,14 +225,14 @@
             <!-- Spacer for the connector height -->
             <div class="h-2"></div>
             
-            <svelte:self node={child} on:select on:check />
+            <svelte:self node={child} onselect oncheck />
           </div>
         {/each}
       </div>
     {:else}
       <!-- Single child - just vertical line -->
       <div class="w-0.5 h-3 {visibleChildren[0]?.active ? 'connector-v-animated' : 'connector-v-static'}"></div>
-      <svelte:self node={visibleChildren[0]} on:select on:check />
+      <svelte:self node={visibleChildren[0]} onselect oncheck />
     {/if}
   {/if}
 </div>

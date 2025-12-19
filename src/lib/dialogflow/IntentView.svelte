@@ -4,17 +4,17 @@
   import IntentTreeNode from './IntentTreeNode.svelte';
   import IntentDetailPanel from './IntentDetailPanel.svelte';
   import { tick } from 'svelte';
+  import { browser } from '$app/environment';
   
-  export let sessionData = null; // Full session data (with interactions)
-  export let searchQuery = '';
+  let { sessionData = null, searchQuery = '' } = $props();
   
   // -- ZOOM STATE --
-  let scale = 1;
+  let scale = $state(1);
   const MIN_ZOOM = 0.1;
   const MAX_ZOOM = 3.0;
   const ZOOM_SENSITIVITY = 0.002; // For smooth wheel zoom
 
-  let zoomContainer; // Reference to scrollable container
+  let zoomContainer = $state(null); // Reference to scrollable container
 
   function zoomIn() {
     scale = Math.min(scale * 1.15, MAX_ZOOM);
@@ -79,23 +79,27 @@
   }
 
   // -- SEARCH STATE --
-  let searchMode = 'standard'; // 'standard' | 'custom'
-  let customSearchQuery = '';
-  let searchResults = []; // Array of matching node IDs
-  let currentResultIndex = -1;
-  let showSearchResultsList = false;
+  let searchMode = $state('standard'); // 'standard' | 'custom'
+  let customSearchQuery = $state('');
+  let searchResults = $state([]); // Array of matching node IDs
+  let currentResultIndex = $state(-1);
+  let showSearchResultsList = $state(false);
   
   // Build tree based on view mode
-  $: summaryTree = $allIntents.length > 0 && sessionData 
-    ? buildIntentTree($allIntents, sessionData, true) 
-    : null;
+  let summaryTree = $derived(
+    $allIntents.length > 0 && sessionData 
+      ? buildIntentTree($allIntents, sessionData, true) 
+      : null
+  );
     
-  $: allTree = $allIntents.length > 0 && sessionData 
-    ? buildIntentTree($allIntents, sessionData, false) 
-    : null;
+  let allTree = $derived(
+    $allIntents.length > 0 && sessionData 
+      ? buildIntentTree($allIntents, sessionData, false) 
+      : null
+  );
   
   // Current tree based on mode
-  $: currentTree = $intentViewMode === 'summary' ? summaryTree : allTree;
+  let currentTree = $derived($intentViewMode === 'summary' ? summaryTree : allTree);
 
   // -- SEARCH LOGIC --
   
@@ -165,7 +169,6 @@
     const query = searchMode === 'custom' ? customSearchQuery : searchQuery;
     
     if (!query.trim()) {
-      currentTree = { ...currentTree }; // Trigger reactivity
       return;
     }
     
@@ -176,9 +179,6 @@
       currentResultIndex = 0;
       jumpToResult(currentResultIndex);
     }
-    
-    // Force update tree reactivity
-    currentTree = { ...currentTree };
   }
   
   // Navigation
@@ -190,7 +190,6 @@
     // Update highlights
     clearHighlights(currentTree.roots);
     highlightNode(currentTree.roots, id);
-    currentTree = { ...currentTree }; // Force update
     
     await tick(); // Wait for DOM update
     
@@ -214,24 +213,29 @@
   }
   
   // React to prop changes (standard search from parent)
-  $: if (searchMode === 'standard' && searchQuery !== undefined) {
-    performSearch();
-  }
+  $effect(() => {
+    if (searchMode === 'standard' && searchQuery !== undefined) {
+      performSearch();
+    }
+  });
 
   // Selection (Detail View)
-  let selectedNode = null;
+  let selectedNode = $state(null);
 
-  function handleNodeSelect(e) {
-    selectedNode = e.detail;
+  function handleNodeSelect(node) {
+    selectedNode = node;
   }
 
-  // Clear selection when view mode changes or search performed
-  $: if ($intentViewMode) selectedNode = null;
+  // Clear selection when view mode changes
+  $effect(() => {
+    if ($intentViewMode) {
+      selectedNode = null;
+    }
+  });
 
   // -- PERSISTENT CHECKLIST --
-  import { browser } from '$app/environment';
-  let checkedIntents = new Set();
-  let showChecklist = false;
+  let checkedIntents = $state(new Set());
+  let showChecklist = $state(false);
 
   // Load from localStorage
   if (browser) {
@@ -246,10 +250,11 @@
   }
 
   // Sync tree with checked state
-  $: if (currentTree && checkedIntents) {
-    syncCheckedState(currentTree.roots);
-    currentTree = { ...currentTree }; // Trigger update
-  }
+  $effect(() => {
+    if (currentTree && checkedIntents) {
+      syncCheckedState(currentTree.roots);
+    }
+  });
 
   function syncCheckedState(nodes) {
     nodes.forEach(node => {
@@ -258,8 +263,7 @@
     });
   }
 
-  function handleNodeCheck(e) {
-    const node = e.detail;
+  function handleNodeCheck(node) {
     if (checkedIntents.has(node.id)) {
       checkedIntents.delete(node.id);
     } else {
@@ -270,7 +274,6 @@
     
     // Update local node state immediately for responsiveness
     node.selected = checkedIntents.has(node.id);
-    currentTree = { ...currentTree };
   }
 
   function saveCheckedIntents() {
@@ -288,7 +291,6 @@
   function jumpToIntent(id) {
     clearHighlights(currentTree.roots);
     highlightNode(currentTree.roots, id);
-    currentTree = { ...currentTree };
     
     // Select it for detail view
     const node = findNodeById(currentTree.roots, id);
@@ -313,9 +315,29 @@
     }
     return null;
   }
+
+  // Computed for search results
+  let checkedCount = $derived(searchResults.filter(id => checkedIntents.has(id)).length);
+  
+  function handleSearchKeydown(e) {
+    if (e.key === 'Enter') performSearch();
+  }
+  
+  function toggleCheckIntent(id) {
+    if (checkedIntents.has(id)) {
+      checkedIntents.delete(id);
+    } else {
+      checkedIntents.add(id);
+    }
+    checkedIntents = new Set(checkedIntents);
+    saveCheckedIntents();
+    // Update node selection visual if rendered
+    const node = findNodeById(currentTree.roots, id);
+    if (node) node.selected = checkedIntents.has(id);
+  }
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} />
 
 <div class="h-full flex flex-col overflow-hidden relative">
   <!-- Top Bar: View Mode + Search Mode + Zoom -->
@@ -327,13 +349,13 @@
         <!-- View Mode Toggle -->
         <div class="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
           <button
-            on:click={() => $intentViewMode = 'summary'}
+            onclick={() => $intentViewMode = 'summary'}
             class="px-3 py-1 text-xs font-medium rounded transition-colors {$intentViewMode === 'summary' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-600 dark:text-gray-400'}"
           >
             🌳 Summary
           </button>
           <button
-            on:click={() => $intentViewMode = 'all'}
+            onclick={() => $intentViewMode = 'all'}
             class="px-3 py-1 text-xs font-medium rounded transition-colors {$intentViewMode === 'all' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-600 dark:text-gray-400'}"
           >
             📋 All Intents
@@ -344,11 +366,11 @@
         <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 px-2">
             <span class="text-[10px] uppercase text-gray-500 font-bold mr-1">Search:</span>
             <button 
-                on:click={() => { searchMode = 'standard'; performSearch(); }}
+                onclick={() => { searchMode = 'standard'; performSearch(); }}
                 class="text-xs px-2 py-0.5 rounded {searchMode === 'standard' ? 'bg-white shadow text-blue-600' : 'text-gray-500'}"
             >Std</button>
             <button 
-                on:click={() => { searchMode = 'custom'; performSearch(); }}
+                onclick={() => { searchMode = 'custom'; performSearch(); }}
                 class="text-xs px-2 py-0.5 rounded {searchMode === 'custom' ? 'bg-white shadow text-purple-600' : 'text-gray-500'}"
             >Custom</button>
         </div>
@@ -356,10 +378,10 @@
       
       <!-- Zoom Controls -->
       <div class="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
-        <button on:click={zoomOut} class="w-6 h-6 flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 rounded" title="Zoom Out">-</button>
+        <button onclick={zoomOut} class="w-6 h-6 flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 rounded" title="Zoom Out">-</button>
         <span class="text-xs w-8 text-center text-gray-600 dark:text-gray-400">{Math.round(scale * 100)}%</span>
-        <button on:click={zoomIn} class="w-6 h-6 flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 rounded" title="Zoom In">+</button>
-        <button on:click={resetZoom} class="text-xs px-2 hover:bg-white dark:hover:bg-gray-700 rounded" title="Reset">Reset</button>
+        <button onclick={zoomIn} class="w-6 h-6 flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 rounded" title="Zoom In">+</button>
+        <button onclick={resetZoom} class="text-xs px-2 hover:bg-white dark:hover:bg-gray-700 rounded" title="Reset">Reset</button>
       </div>
     </div>
     
@@ -370,7 +392,7 @@
                 <input 
                     type="text" 
                     bind:value={customSearchQuery} 
-                    on:keydown={(e) => e.key === 'Enter' && performSearch()}
+                    onkeydown={handleSearchKeydown}
                     placeholder="Search intent name or response content..." 
                     class="w-full text-xs border border-purple-200 dark:border-purple-900 bg-purple-50 dark:bg-purple-900/10 rounded-md px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-purple-500"
                 />
@@ -384,17 +406,17 @@
             </div>
             
             <button 
-                on:click={performSearch}
+                onclick={performSearch}
                 class="px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs rounded-md shadow-sm transition-colors"
             >
                 Search
             </button>
             
             <div class="flex gap-0.5">
-                <button on:click={prevResult} disabled={searchResults.length === 0} class="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded disabled:opacity-30">
+                <button onclick={prevResult} disabled={searchResults.length === 0} class="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded disabled:opacity-30">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
                 </button>
-                <button on:click={nextResult} disabled={searchResults.length === 0} class="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded disabled:opacity-30">
+                <button onclick={nextResult} disabled={searchResults.length === 0} class="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded disabled:opacity-30">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
             </div>
@@ -403,11 +425,10 @@
 
     <!-- Search Results Summary & List (Appears for both Standard and Custom search if results exist) -->
     {#if searchResults.length > 0}
-        {@const checkedCount = searchResults.filter(id => checkedIntents.has(id)).length}
         <div class="relative z-20 ml-1">
             <div class="relative">
                 <button 
-                    on:click={() => showSearchResultsList = !showSearchResultsList}
+                    onclick={() => showSearchResultsList = !showSearchResultsList}
                     class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-purple-200 dark:border-purple-900/50 rounded-full shadow-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all text-sm font-medium text-purple-700 dark:text-purple-300 group"
                 >
                     <span class="w-2 h-2 rounded-full {checkedCount === searchResults.length ? 'bg-green-500' : 'bg-purple-500'}"></span>
@@ -430,15 +451,7 @@
                                     <!-- Checkbox (syncs with checkedIntents) -->
                                     <button 
                                         class="p-1.5 rounded text-gray-400 hover:text-green-500 hover:bg-gray-100 dark:hover:bg-gray-700 {checkedIntents.has(id) ? 'text-green-500' : ''}"
-                                        on:click|stopPropagation={() => {
-                                            if (checkedIntents.has(id)) checkedIntents.delete(id);
-                                            else checkedIntents.add(id);
-                                            checkedIntents = new Set(checkedIntents);
-                                            saveCheckedIntents();
-                                            // Update node selection visual if rendered
-                                            if (node) node.selected = checkedIntents.has(id);
-                                            currentTree = {...currentTree};
-                                        }}
+                                        onclick={(e) => { e.stopPropagation(); toggleCheckIntent(id); }}
                                     >
                                         {#if checkedIntents.has(id)}
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
@@ -449,10 +462,9 @@
                                     
                                     <!-- Label & Jump -->
                                     <button 
-                                        on:click={() => {
+                                        onclick={() => {
                                             currentResultIndex = index;
                                             jumpToResult(index);
-                                            // showSearchResultsList = false; // Option: keep open or close? User might want to go down the list.
                                         }}
                                         class="flex-1 text-left text-xs px-1 py-1 truncate {index === currentResultIndex ? 'text-purple-600 font-medium' : 'text-gray-600 dark:text-gray-300'}"
                                         title={node ? node.displayName : id}
@@ -473,7 +485,7 @@
       <div class="absolute top-16 right-4 z-50">
         <div class="relative">
           <button 
-            on:click={() => showChecklist = !showChecklist}
+            onclick={() => showChecklist = !showChecklist}
             class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all text-sm font-medium text-gray-700 dark:text-gray-200 group"
           >
             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -485,7 +497,7 @@
             <div class="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2">
               <div class="p-2 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
                 <span class="text-xs font-bold text-gray-500 uppercase">Checked Intents</span>
-                <button on:click={resetChecklist} class="text-xs text-red-500 hover:text-red-600 font-medium px-2 py-0.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
+                <button onclick={resetChecklist} class="text-xs text-red-500 hover:text-red-600 font-medium px-2 py-0.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20">
                   Reset
                 </button>
               </div>
@@ -493,7 +505,7 @@
                 {#each [...checkedIntents] as id}
                   {@const node = findNodeById(currentTree.roots, id)}
                   <button 
-                    on:click={() => jumpToIntent(id)}
+                    onclick={() => jumpToIntent(id)}
                     class="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 rounded flex items-center justify-between group"
                   >
                     <span class="truncate text-gray-700 dark:text-gray-300">{node ? node.displayName : id}</span>
@@ -511,21 +523,23 @@
   
   <div class="flex-1 flex overflow-hidden">
     <!-- Content Area with Zoom -->
-    <div class="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0a0a] relative" bind:this={zoomContainer} on:wheel={handleWheel}>
+    <div class="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0a0a] relative" bind:this={zoomContainer} onwheel={handleWheel}>
         <div 
           class="min-w-full min-h-full p-8 origin-top-left"
           style="transform: scale({scale}); width: {100/scale}%; height: {100/scale}%;"
-          on:click={() => selectedNode = null}
+          onclick={() => selectedNode = null}
+          onkeydown={(e) => e.key === 'Escape' && (selectedNode = null)}
+          role="presentation"
         >
           {#if $allIntents.length === 0}
               <div class="flex flex-col items-center justify-center py-20 text-gray-400">
                   <p>Loading intents...</p>
-                  <button on:click={() => fetchAllIntents()} class="mt-4 text-blue-500 hover:underline">Retry</button>
+                  <button onclick={() => fetchAllIntents()} class="mt-4 text-blue-500 hover:underline">Retry</button>
               </div>
           {:else if currentTree && currentTree.roots.length > 0}
             <div class="flex flex-row flex-wrap gap-8 justify-center items-start min-w-max pb-20">
               {#each currentTree.roots as root}
-                <IntentTreeNode node={root} on:select={handleNodeSelect} on:check={handleNodeCheck} />
+                <IntentTreeNode node={root} onselect={handleNodeSelect} oncheck={handleNodeCheck} />
               {/each}
             </div>
           {:else}
