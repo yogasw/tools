@@ -32,6 +32,7 @@
   let customSearchQuery = '';
   let searchResults = []; // Array of matching node IDs
   let currentResultIndex = -1;
+  let showSearchResultsList = false;
   
   // Build tree based on view mode
   $: summaryTree = $allIntents.length > 0 && sessionData 
@@ -343,6 +344,73 @@
                 <button on:click={nextResult} disabled={searchResults.length === 0} class="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded disabled:opacity-30">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
+            </div>
+        </div>
+    {/if}
+
+    <!-- Search Results Summary & List (Appears for both Standard and Custom search if results exist) -->
+    {#if searchResults.length > 0}
+        {@const checkedCount = searchResults.filter(id => checkedIntents.has(id)).length}
+        <div class="relative z-20 ml-1">
+            <div class="relative">
+                <button 
+                    on:click={() => showSearchResultsList = !showSearchResultsList}
+                    class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-purple-200 dark:border-purple-900/50 rounded-full shadow-lg hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-all text-sm font-medium text-purple-700 dark:text-purple-300 group"
+                >
+                    <span class="w-2 h-2 rounded-full {checkedCount === searchResults.length ? 'bg-green-500' : 'bg-purple-500'}"></span>
+                    <span>{checkedCount} / {searchResults.length} Checked</span>
+                    <svg class="w-4 h-4 text-purple-400 group-hover:text-purple-600 transition-transform {showSearchResultsList ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                
+                {#if showSearchResultsList}
+                    <div class="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 rounded-lg shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 max-h-[60vh] flex flex-col">
+                        <div class="p-2 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+                             <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-gray-500 uppercase">Found Intents</span>
+                                <span class="text-[10px] text-gray-400">{checkedCount} selected</span>
+                             </div>
+                        </div>
+                        <div class="overflow-y-auto p-1 flex-1">
+                            {#each searchResults as id, index}
+                                {@const node = findNodeById(currentTree.roots, id)}
+                                <div class="flex items-center gap-1 group/item p-1 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded">
+                                    <!-- Checkbox (syncs with checkedIntents) -->
+                                    <button 
+                                        class="p-1.5 rounded text-gray-400 hover:text-green-500 hover:bg-gray-100 dark:hover:bg-gray-700 {checkedIntents.has(id) ? 'text-green-500' : ''}"
+                                        on:click|stopPropagation={() => {
+                                            if (checkedIntents.has(id)) checkedIntents.delete(id);
+                                            else checkedIntents.add(id);
+                                            checkedIntents = new Set(checkedIntents);
+                                            saveCheckedIntents();
+                                            // Update node selection visual if rendered
+                                            if (node) node.selected = checkedIntents.has(id);
+                                            currentTree = {...currentTree};
+                                        }}
+                                    >
+                                        {#if checkedIntents.has(id)}
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                                        {:else}
+                                            <div class="w-4 h-4 border border-gray-300 dark:border-gray-600 rounded"></div>
+                                        {/if}
+                                    </button>
+                                    
+                                    <!-- Label & Jump -->
+                                    <button 
+                                        on:click={() => {
+                                            currentResultIndex = index;
+                                            jumpToResult(index);
+                                            // showSearchResultsList = false; // Option: keep open or close? User might want to go down the list.
+                                        }}
+                                        class="flex-1 text-left text-xs px-1 py-1 truncate {index === currentResultIndex ? 'text-purple-600 font-medium' : 'text-gray-600 dark:text-gray-300'}"
+                                        title={node ? node.displayName : id}
+                                    >
+                                        {node ? node.displayName : id}
+                                    </button>
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
             </div>
         </div>
     {/if}

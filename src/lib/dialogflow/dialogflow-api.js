@@ -75,7 +75,7 @@ export function getConsoleUrl(name) {
     const intentId = name.split('/').pop();
     
     if (projectMatch && intentId) {
-      return `https://dialogflow.cloud.google.com/#/agent/${projectMatch[1]}/intent/${intentId}/`;
+      return `https://dialogflow.cloud.google.com/#/agent/${projectMatch[1]}/editIntent/${intentId}/`;
     }
   } catch (e) {
     console.warn('Error building console URL:', e);
