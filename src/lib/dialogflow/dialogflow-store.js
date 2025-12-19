@@ -5,7 +5,6 @@ import { browser } from '$app/environment';
 const STORAGE_KEYS = {
   url: 'dialogflow_url',
   authorization: 'dialogflow_authorization',
-  cookie: 'dialogflow_Cookie',
   pageSize: 'dialogflow_pageSize',
   interactionsPageSize: 'dialogflow_interactionsPageSize'
 };
@@ -31,7 +30,6 @@ function createPersistentStore(key, defaultValue = '') {
 // Config stores (persisted)
 export const configUrl = createPersistentStore(STORAGE_KEYS.url);
 export const configAuthorization = createPersistentStore(STORAGE_KEYS.authorization);
-export const configCookie = createPersistentStore(STORAGE_KEYS.cookie);
 export const configPageSize = createPersistentStore(STORAGE_KEYS.pageSize, '5000');
 export const configInteractionsPageSize = createPersistentStore(STORAGE_KEYS.interactionsPageSize, '50');
 

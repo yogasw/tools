@@ -2,7 +2,6 @@ import { get } from 'svelte/store';
 import {
   configUrl,
   configAuthorization,
-  configCookie,
   historyData,
   allIntents,
   isLoading,
@@ -88,7 +87,6 @@ export function getConsoleUrl(name) {
  */
 function buildHeaders() {
   const authorization = get(configAuthorization);
-  const cookie = get(configCookie);
   
   const headers = {
     'Content-Type': 'application/json'
@@ -96,10 +94,6 @@ function buildHeaders() {
   
   if (authorization) {
     headers['Authorization'] = authorization;
-  }
-  
-  if (cookie) {
-    headers['Cookie'] = cookie;
   }
   
   return headers;
