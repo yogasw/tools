@@ -216,7 +216,8 @@ export async function fetchAllIntents() {
       trainingPhrases: intent.trainingPhrases?.length || 0,
       priority: intent.priority || 0,
       rootFollowupIntentName: intent.rootFollowupIntentName || null,
-      parentFollowupIntentName: intent.parentFollowupIntentName || null
+      parentFollowupIntentName: intent.parentFollowupIntentName || null,
+      messages: intent.messages || []
     }));
     
     allIntents.set(transformedIntents);
@@ -297,6 +298,7 @@ export function buildIntentTree(allIntentsList, sessionData, summaryOnly = false
       count: interaction?.count || 0,
       history: interaction?.history || '',
       first: interaction?.first || false,
+      messages: intent.messages || [],
       children: []
     };
     

@@ -65,6 +65,17 @@
     50% { border-color: #f9a8d4; } /* pink-300 */
   }
   
+  /* Highlight Glow Effect */
+  .node-highlight {
+    box-shadow: 0 0 0 2px #ec4899, 0 0 8px rgba(236, 72, 153, 0.5); /* pink-500 */
+    animation: glow-pulse 1.5s infinite alternate;
+  }
+
+  @keyframes glow-pulse {
+    from { box-shadow: 0 0 0 2px #ec4899, 0 0 4px rgba(236, 72, 153, 0.3); }
+    to { box-shadow: 0 0 0 2px #ec4899, 0 0 12px rgba(236, 72, 153, 0.6); }
+  }
+  
   :global(.dark) .line-inactive {
     border-color: #4b5563; /* gray-600 */
   }
@@ -75,13 +86,27 @@
 
 <div class="inline-flex flex-col items-center">
   <!-- Node box -->
-  <div class="px-3 py-1.5 rounded-lg border-2 text-xs font-medium whitespace-nowrap z-20 bg-white dark:bg-gray-800
+  <div 
+    id="node-{node.id}"
+    on:click={() => node.selected = !node.selected} 
+    role="button"
+    tabindex="0"
+    on:keypress={(e) => e.key === 'Enter' && (node.selected = !node.selected)}
+    class="px-3 py-1.5 rounded-lg border-2 text-xs font-medium whitespace-nowrap z-20 transition-all duration-200 cursor-pointer select-none
+    bg-white dark:bg-gray-800
+    {node.highlighted ? 'node-highlight scale-105' : ''}
     {node.isFallback 
       ? 'border-yellow-400 dark:border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' 
       : node.active 
         ? 'border-gray-400 dark:border-gray-500 bg-gray-100 dark:bg-gray-700'
         : 'border-gray-200 dark:border-gray-700'}">
+    
     <div class="flex items-center gap-1.5">
+      <!-- Check mark selection indicator -->
+      {#if node.selected}
+        <span class="text-green-500 dark:text-green-400 font-bold text-sm">✓</span>
+      {/if}
+
       {#if node.isFallback}
         <span class="w-2 h-2 rounded-full bg-yellow-500 flex-shrink-0"></span>
       {/if}
