@@ -1,0 +1,709 @@
+{
+  "sessionConversations": [
+    {
+      "hasNomatchInteraction": true,
+      "startTime": "2025-12-19T00:57:02.729Z",
+      "endTime": "2025-12-19T00:58:44.384Z",
+      "interactions": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341c3609-68f1c",
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "df61d959-09cc-43b8-9266-306c96660ace-f8d7588c",
+            "queryResult": {
+              "queryText": "test",
+              "parameters": {},
+              "allRequiredParamsPresent": true,
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/test-followup",
+                  "lifespanCount": 2
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/f21d8c68-8dfd-483c-b705-c5f4daa03500",
+                "displayName": "test"
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:57:02.729Z",
+          "deleteTime": "2027-01-23T00:57:02.729Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"test\",\n  \"parameters\": {\n  },\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"test-followup\",\n    \"lifespanCount\": 2\n  }],\n  \"intent\": {\n    \"id\": \"f21d8c68-8dfd-483c-b705-c5f4daa03500\",\n    \"displayName\": \"test\",\n    \"priority\": 500000,\n    \"outputContexts\": [{\n      \"name\": \"test-followup\",\n      \"lifespanCount\": 2\n    }],\n    \"messages\": [{\n      \"text\": {\n      },\n      \"lang\": \"en\"\n    }]\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"df61d959-09cc-43b8-9266-306c96660ace-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:57:02.727733Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341c3e2b-45ea2",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/test-followup",
+              "lifespanCount": 2,
+              "parameters": {
+                "intent_action": ""
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "669767c9-3b18-4a98-89ee-55dc76194173-f8d7588c",
+            "queryResult": {
+              "queryText": "salam",
+              "action": "test.test-fallback",
+              "parameters": {},
+              "allRequiredParamsPresent": true,
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      ""
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/test-followup",
+                  "lifespanCount": 1
+                },
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/__system_counters__",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "no-input": "0",
+                    "no-match": "1"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/580dc7eb-ce14-4d82-ba42-1b9d7e06b60b",
+                "displayName": "test - fallback",
+                "isFallback": true
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:57:04.811Z",
+          "deleteTime": "2027-01-23T00:57:04.811Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"salam\",\n  \"action\": \"test.test-fallback\",\n  \"parameters\": {\n  },\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"test-followup\",\n    \"lifespanCount\": 1,\n    \"lifetime\": \"1200s\",\n    \"createdTimestamp\": \"2025-12-19T00:57:02.727986Z\",\n    \"requestCount\": 1\n  }, {\n    \"name\": \"__system_counters__\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"no-input\": \"0\",\n      \"no-match\": \"1\"\n    },\n    \"requestCount\": 1\n  }],\n  \"intent\": {\n    \"id\": \"580dc7eb-ce14-4d82-ba42-1b9d7e06b60b\",\n    \"displayName\": \"test - fallback\",\n    \"priority\": 500000,\n    \"isFallback\": true,\n    \"disableMl\": true,\n    \"inputContextNames\": [\"test-followup\"],\n    \"action\": \"test.test-fallback\",\n    \"messages\": [{\n      \"text\": {\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"f21d8c68-8dfd-483c-b705-c5f4daa03500\",\n    \"parentFollowupIntentId\": \"f21d8c68-8dfd-483c-b705-c5f4daa03500\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"669767c9-3b18-4a98-89ee-55dc76194173-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:57:04.80974Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341cd3bd-bcdd5",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/test-followup",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "test.test-fallback"
+              }
+            },
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/__system_counters__",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "test.test-fallback",
+                "no-match": "1",
+                "no-input": "0"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "77238aaf-58f7-4fdd-83c7-c54075d7e6e2-f8d7588c",
+            "queryResult": {
+              "queryText": "Reseller Konsultasi",
+              "parameters": {},
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "*Form Pendaftaran Konsultasi Reseller*\n\nNama Pasien :\nTanggal Lahir :\nJenis Kelamin :\nNo HP :\nKeluhan :",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Hi {$.name}, dengan saya Elsa yang akan membantumu hari ini.\n\nMohon lengkapi form berikut tanpa merubah format untuk melanjutkan proses konsultasi"
+                    ]
+                  }
+                },
+                {
+                  "text": {
+                    "text": [
+                      "*Form Pendaftaran Konsultasi Reseller*\n\nNama Pasien :\nTanggal Lahir :\nJenis Kelamin :\nNo HP :\nKeluhan :"
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul",
+                  "lifespanCount": 1
+                },
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/__system_counters__",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "no-input": "0",
+                    "no-match": "0"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+                "displayName": "ads_reseller_konsul"
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:57:43.101Z",
+          "deleteTime": "2027-01-23T00:57:43.101Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"Reseller Konsultasi\",\n  \"parameters\": {\n  },\n  \"fulfillmentText\": \"*Form Pendaftaran Konsultasi Reseller*\\n\\nNama Pasien :\\nTanggal Lahir :\\nJenis Kelamin :\\nNo HP :\\nKeluhan :\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Hi {$.name}, dengan saya Elsa yang akan membantumu hari ini.\\n\\nMohon lengkapi form berikut tanpa merubah format untuk melanjutkan proses konsultasi\"]\n    },\n    \"lang\": \"en\"\n  }, {\n    \"text\": {\n      \"text\": [\"*Form Pendaftaran Konsultasi Reseller*\\n\\nNama Pasien :\\nTanggal Lahir :\\nJenis Kelamin :\\nNo HP :\\nKeluhan :\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul\",\n    \"lifespanCount\": 1\n  }, {\n    \"name\": \"__system_counters__\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"no-input\": \"0\",\n      \"no-match\": \"0\"\n    },\n    \"lifetime\": \"1200s\",\n    \"createdTimestamp\": \"2025-12-19T00:57:04.810052Z\",\n    \"requestCount\": 2\n  }],\n  \"intent\": {\n    \"id\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"displayName\": \"ads_reseller_konsul\",\n    \"priority\": 500000,\n    \"disableMl\": true,\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul\",\n      \"lifespanCount\": 1\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Hi {$.name}, dengan saya Elsa yang akan membantumu hari ini.\\n\\nMohon lengkapi form berikut tanpa merubah format untuk melanjutkan proses konsultasi\"]\n      },\n      \"lang\": \"en\"\n    }, {\n      \"text\": {\n        \"text\": [\"*Form Pendaftaran Konsultasi Reseller*\\n\\nNama Pasien :\\nTanggal Lahir :\\nJenis Kelamin :\\nNo HP :\\nKeluhan :\"]\n      },\n      \"lang\": \"en\"\n    }]\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"77238aaf-58f7-4fdd-83c7-c54075d7e6e2-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:57:43.099433Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341d11f9-aa211",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": ""
+              }
+            },
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/__system_counters__",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "",
+                "no-input": "0",
+                "no-match": "0"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "65c32f88-fa2b-4c7b-9e9e-4b311422a007-f8d7588c",
+            "queryResult": {
+              "queryText": "yoga 123",
+              "parameters": {
+                "any": "yoga 123"
+              },
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Mohon untuk mengirimkan sisi foto *tampak depan* pada area yang ingin di konsultasikan ya.\n",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Mohon untuk mengirimkan sisi foto *tampak depan* pada area yang ingin di konsultasikan ya.\n"
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul_input_foto_1",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "any": "yoga 123",
+                    "any.original": "yoga 123"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/82f02477-47c2-4140-9f8f-ecdecf94f742",
+                "displayName": "ads_reseller_konsul_input_foto_1"
+              },
+              "intentDetectionConfidence": 0.6,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:57:59.033Z",
+          "deleteTime": "2027-01-23T00:57:59.033Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"yoga 123\",\n  \"parameters\": {\n    \"any\": \"yoga 123\"\n  },\n  \"fulfillmentText\": \"Mohon untuk mengirimkan sisi foto *tampak depan* pada area yang ingin di konsultasikan ya.\\n\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Mohon untuk mengirimkan sisi foto *tampak depan* pada area yang ingin di konsultasikan ya.\\n\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul_input_foto_1\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"any\": \"yoga 123\",\n      \"any.original\": \"yoga 123\"\n    }\n  }],\n  \"intent\": {\n    \"id\": \"82f02477-47c2-4140-9f8f-ecdecf94f742\",\n    \"displayName\": \"ads_reseller_konsul_input_foto_1\",\n    \"priority\": 500000,\n    \"inputContextNames\": [\"ads_reseller_konsul\"],\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul_input_foto_1\",\n      \"lifespanCount\": 1\n    }],\n    \"parameters\": [{\n      \"id\": \"d631f39d-db59-4f71-ba20-f2958e564062\",\n      \"displayName\": \"any\",\n      \"value\": \"$any\",\n      \"entityTypeDisplayName\": \"@sys.any\"\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Mohon untuk mengirimkan sisi foto *tampak depan* pada area yang ingin di konsultasikan ya.\\n\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\"\n  },\n  \"intentDetectionConfidence\": 0.6,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"65c32f88-fa2b-4c7b-9e9e-4b311422a007-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:57:59.030862Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341d3234-3624b",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1",
+              "lifespanCount": 1,
+              "parameters": {
+                "any": "yoga 123",
+                "any.original": "yoga 123",
+                "intent_action": ""
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "6733f456-4aa9-4976-965e-15dbdc568c66-f8d7588c",
+            "queryResult": {
+              "queryText": "https://sds",
+              "parameters": {},
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* ."
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul_input_foto_1",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "any.original": "yoga 123",
+                    "any": "yoga 123"
+                  }
+                },
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/__system_counters__",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "no-input": "0",
+                    "no-match": "1"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/1280a533-53e4-4556-88f8-74dbd156b9b0",
+                "displayName": "ads_reseller_konsul_input_foto_1_fallback",
+                "isFallback": true
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:58:07.284Z",
+          "deleteTime": "2027-01-23T00:58:07.284Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"https://sds\",\n  \"parameters\": {\n  },\n  \"fulfillmentText\": \"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul_input_foto_1\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"any\": \"yoga 123\",\n      \"any.original\": \"yoga 123\"\n    }\n  }, {\n    \"name\": \"__system_counters__\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"no-input\": \"0\",\n      \"no-match\": \"1\"\n    },\n    \"requestCount\": 1\n  }],\n  \"intent\": {\n    \"id\": \"1280a533-53e4-4556-88f8-74dbd156b9b0\",\n    \"displayName\": \"ads_reseller_konsul_input_foto_1_fallback\",\n    \"priority\": 500000,\n    \"isFallback\": true,\n    \"inputContextNames\": [\"ads_reseller_konsul_input_foto_1\"],\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul_input_foto_1\",\n      \"lifespanCount\": 1\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"82f02477-47c2-4140-9f8f-ecdecf94f742\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"6733f456-4aa9-4976-965e-15dbdc568c66-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:58:07.28287Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341d3cb4-95094",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "",
+                "any": "yoga 123",
+                "any.original": "yoga 123"
+              }
+            },
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/__system_counters__",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "",
+                "no-match": "1",
+                "no-input": "0"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "2da3c9e9-3c71-4333-b9a3-c07812d65fcc-f8d7588c",
+            "queryResult": {
+              "queryText": "sd",
+              "parameters": {},
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* ."
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul_input_foto_1",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "any": "yoga 123",
+                    "any.original": "yoga 123"
+                  }
+                },
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/__system_counters__",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "no-input": "0",
+                    "no-match": "2"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/1280a533-53e4-4556-88f8-74dbd156b9b0",
+                "displayName": "ads_reseller_konsul_input_foto_1_fallback",
+                "isFallback": true
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:58:09.972Z",
+          "deleteTime": "2027-01-23T00:58:09.972Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"sd\",\n  \"parameters\": {\n  },\n  \"fulfillmentText\": \"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul_input_foto_1\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"any\": \"yoga 123\",\n      \"any.original\": \"yoga 123\"\n    }\n  }, {\n    \"name\": \"__system_counters__\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"no-input\": \"0\",\n      \"no-match\": \"2\"\n    },\n    \"lifetime\": \"1200s\",\n    \"createdTimestamp\": \"2025-12-19T00:58:07.283110Z\",\n    \"requestCount\": 2\n  }],\n  \"intent\": {\n    \"id\": \"1280a533-53e4-4556-88f8-74dbd156b9b0\",\n    \"displayName\": \"ads_reseller_konsul_input_foto_1_fallback\",\n    \"priority\": 500000,\n    \"isFallback\": true,\n    \"inputContextNames\": [\"ads_reseller_konsul_input_foto_1\"],\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul_input_foto_1\",\n      \"lifespanCount\": 1\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"82f02477-47c2-4140-9f8f-ecdecf94f742\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"2da3c9e9-3c71-4333-b9a3-c07812d65fcc-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:58:09.970795Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341d40fd-97e5f",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "",
+                "any.original": "yoga 123",
+                "any": "yoga 123"
+              }
+            },
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/__system_counters__",
+              "lifespanCount": 1,
+              "parameters": {
+                "no-match": "2",
+                "intent_action": "",
+                "no-input": "0"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "7c6c97b2-9946-4b5a-badd-f9a7a7e44863-f8d7588c",
+            "queryResult": {
+              "queryText": "sd",
+              "parameters": {},
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* ."
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul_input_foto_1",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "any.original": "yoga 123",
+                    "any": "yoga 123"
+                  }
+                },
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/__system_counters__",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "no-input": "0",
+                    "no-match": "3"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/1280a533-53e4-4556-88f8-74dbd156b9b0",
+                "displayName": "ads_reseller_konsul_input_foto_1_fallback",
+                "isFallback": true
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:58:11.069Z",
+          "deleteTime": "2027-01-23T00:58:11.069Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"sd\",\n  \"parameters\": {\n  },\n  \"fulfillmentText\": \"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul_input_foto_1\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"any\": \"yoga 123\",\n      \"any.original\": \"yoga 123\"\n    }\n  }, {\n    \"name\": \"__system_counters__\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"no-input\": \"0\",\n      \"no-match\": \"3\"\n    },\n    \"lifetime\": \"1200s\",\n    \"createdTimestamp\": \"2025-12-19T00:58:07.283110Z\",\n    \"requestCount\": 3\n  }],\n  \"intent\": {\n    \"id\": \"1280a533-53e4-4556-88f8-74dbd156b9b0\",\n    \"displayName\": \"ads_reseller_konsul_input_foto_1_fallback\",\n    \"priority\": 500000,\n    \"isFallback\": true,\n    \"inputContextNames\": [\"ads_reseller_konsul_input_foto_1\"],\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul_input_foto_1\",\n      \"lifespanCount\": 1\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"82f02477-47c2-4140-9f8f-ecdecf94f742\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"7c6c97b2-9946-4b5a-badd-f9a7a7e44863-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:58:11.067389Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341d81e5-8c194",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "",
+                "any.original": "yoga 123",
+                "any": "yoga 123"
+              }
+            },
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/__system_counters__",
+              "lifespanCount": 1,
+              "parameters": {
+                "no-match": "3",
+                "intent_action": "",
+                "no-input": "0"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "f66c07b1-ac3c-4325-9464-e49e9855ddf6-f8d7588c",
+            "queryResult": {
+              "queryText": "https:// .cloudfront.net/ /image/upload/",
+              "parameters": {},
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* ."
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul_input_foto_1",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "any": "yoga 123",
+                    "any.original": "yoga 123"
+                  }
+                },
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/__system_counters__",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "no-input": "0",
+                    "no-match": "4"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/1280a533-53e4-4556-88f8-74dbd156b9b0",
+                "displayName": "ads_reseller_konsul_input_foto_1_fallback",
+                "isFallback": true
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:58:27.685Z",
+          "deleteTime": "2027-01-23T00:58:27.685Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"https:// .cloudfront.net/ /image/upload/\",\n  \"parameters\": {\n  },\n  \"fulfillmentText\": \"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul_input_foto_1\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"any\": \"yoga 123\",\n      \"any.original\": \"yoga 123\"\n    }\n  }, {\n    \"name\": \"__system_counters__\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"no-input\": \"0\",\n      \"no-match\": \"4\"\n    },\n    \"lifetime\": \"1200s\",\n    \"createdTimestamp\": \"2025-12-19T00:58:07.283110Z\",\n    \"requestCount\": 4\n  }],\n  \"intent\": {\n    \"id\": \"1280a533-53e4-4556-88f8-74dbd156b9b0\",\n    \"displayName\": \"ads_reseller_konsul_input_foto_1_fallback\",\n    \"priority\": 500000,\n    \"isFallback\": true,\n    \"inputContextNames\": [\"ads_reseller_konsul_input_foto_1\"],\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul_input_foto_1\",\n      \"lifespanCount\": 1\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* .\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"82f02477-47c2-4140-9f8f-ecdecf94f742\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"f66c07b1-ac3c-4325-9464-e49e9855ddf6-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:58:27.683898Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341db179-aac8a",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1",
+              "lifespanCount": 1,
+              "parameters": {
+                "any": "yoga 123",
+                "any.original": "yoga 123",
+                "intent_action": ""
+              }
+            },
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/__system_counters__",
+              "lifespanCount": 1,
+              "parameters": {
+                "no-input": "0",
+                "intent_action": "",
+                "no-match": "4"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "f855ea8f-1a57-4c1a-9aca-0eb51e71b444-f8d7588c",
+            "queryResult": {
+              "queryText": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+              "parameters": {
+                "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/"
+              },
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Mohon untuk mengirimkan sisi foto *tampak kiri* pada area yang ingin di konsultasikan ya.",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Mohon untuk mengirimkan sisi foto *tampak kiri* pada area yang ingin di konsultasikan ya."
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul_input_foto_2",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                    "url.original": "https://dsdsd.cloudfront.net/sdsd/image/upload/"
+                  }
+                },
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/__system_counters__",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                    "no-match": "0",
+                    "url.original": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                    "no-input": "0"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/18701a05-7d03-4777-8c6a-a43c2885017e",
+                "displayName": "ads_reseller_konsul_input_foto_2"
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:58:39.865Z",
+          "deleteTime": "2027-01-23T00:58:39.865Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\",\n  \"parameters\": {\n    \"url\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\"\n  },\n  \"fulfillmentText\": \"Mohon untuk mengirimkan sisi foto *tampak kiri* pada area yang ingin di konsultasikan ya.\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Mohon untuk mengirimkan sisi foto *tampak kiri* pada area yang ingin di konsultasikan ya.\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul_input_foto_2\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"url\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\",\n      \"url.original\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\"\n    }\n  }, {\n    \"name\": \"__system_counters__\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"no-input\": \"0\",\n      \"no-match\": \"0\",\n      \"url\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\",\n      \"url.original\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\"\n    },\n    \"lifetime\": \"1200s\",\n    \"createdTimestamp\": \"2025-12-19T00:58:07.283110Z\",\n    \"requestCount\": 5\n  }],\n  \"intent\": {\n    \"id\": \"18701a05-7d03-4777-8c6a-a43c2885017e\",\n    \"displayName\": \"ads_reseller_konsul_input_foto_2\",\n    \"priority\": 500000,\n    \"inputContextNames\": [\"ads_reseller_konsul_input_foto_1\"],\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul_input_foto_2\",\n      \"lifespanCount\": 1\n    }],\n    \"parameters\": [{\n      \"id\": \"68219094-9f05-4bd7-accb-220c47a1e2f0\",\n      \"displayName\": \"url\",\n      \"value\": \"$url\",\n      \"entityTypeDisplayName\": \"@sys.url\"\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Mohon untuk mengirimkan sisi foto *tampak kiri* pada area yang ingin di konsultasikan ya.\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"82f02477-47c2-4140-9f8f-ecdecf94f742\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"f855ea8f-1a57-4c1a-9aca-0eb51e71b444-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:58:39.863651Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341dbd9e-ccfdf",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_2",
+              "lifespanCount": 1,
+              "parameters": {
+                "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                "intent_action": "",
+                "url.original": "https://dsdsd.cloudfront.net/sdsd/image/upload/"
+              }
+            },
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/__system_counters__",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "",
+                "url.original": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                "no-match": "0",
+                "no-input": "0"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "32289921-d972-476e-b7de-7b3ba484ebff-f8d7588c",
+            "queryResult": {
+              "queryText": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+              "parameters": {
+                "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/"
+              },
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Mohon untuk mengirimkan sisi foto *tampak kanan* pada area yang ingin di konsultasikan ya.",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Mohon untuk mengirimkan sisi foto *tampak kanan* pada area yang ingin di konsultasikan ya."
+                    ]
+                  }
+                }
+              ],
+              "outputContexts": [
+                {
+                  "name": "projects/ariokiasisten/agent/sessions/cea3ca28-45c1-c0a7-f7d7-f82531e8745e/contexts/ads_reseller_konsul_input_foto_3",
+                  "lifespanCount": 1,
+                  "parameters": {
+                    "url.original": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                    "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/"
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/2b3eb017-8595-4d78-9215-1fab6eaab0e0",
+                "displayName": "ads_reseller_konsul_input_foto_3"
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:58:42.974Z",
+          "deleteTime": "2027-01-23T00:58:42.974Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\",\n  \"parameters\": {\n    \"url\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\"\n  },\n  \"fulfillmentText\": \"Mohon untuk mengirimkan sisi foto *tampak kanan* pada area yang ingin di konsultasikan ya.\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Mohon untuk mengirimkan sisi foto *tampak kanan* pada area yang ingin di konsultasikan ya.\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"outputContexts\": [{\n    \"name\": \"ads_reseller_konsul_input_foto_3\",\n    \"lifespanCount\": 1,\n    \"parameters\": {\n      \"url\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\",\n      \"url.original\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\"\n    }\n  }],\n  \"intent\": {\n    \"id\": \"2b3eb017-8595-4d78-9215-1fab6eaab0e0\",\n    \"displayName\": \"ads_reseller_konsul_input_foto_3\",\n    \"priority\": 500000,\n    \"inputContextNames\": [\"ads_reseller_konsul_input_foto_2\"],\n    \"outputContexts\": [{\n      \"name\": \"ads_reseller_konsul_input_foto_3\",\n      \"lifespanCount\": 1\n    }],\n    \"parameters\": [{\n      \"id\": \"70385b4d-e7ae-439d-b703-32ffbfe6c909\",\n      \"displayName\": \"url\",\n      \"value\": \"$url\",\n      \"entityTypeDisplayName\": \"@sys.url\"\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Mohon untuk mengirimkan sisi foto *tampak kanan* pada area yang ingin di konsultasikan ya.\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"18701a05-7d03-4777-8c6a-a43c2885017e\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"32289921-d972-476e-b7de-7b3ba484ebff-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:58:42.972982Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        },
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729/interactions/19b341dc320-d505b",
+          "inputContexts": [
+            {
+              "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_3",
+              "lifespanCount": 1,
+              "parameters": {
+                "intent_action": "",
+                "url.original": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+                "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/"
+              }
+            }
+          ],
+          "originalRequestSource": "DIALOGFLOW_CONSOLE",
+          "v2Response": {
+            "responseId": "ebb7668f-2e07-4350-9c79-68d0d5ab3f47-f8d7588c",
+            "queryResult": {
+              "queryText": "https://dsdsd.cloudfront.net/sdsd/image/upload/",
+              "parameters": {
+                "url": "https://dsdsd.cloudfront.net/sdsd/image/upload/"
+              },
+              "allRequiredParamsPresent": true,
+              "fulfillmentText": "Hi {$.name}, mohon menunggu sebentar Elsa akan menghubungkanmu ke rekan yang sedang bertugas.",
+              "fulfillmentMessages": [
+                {
+                  "text": {
+                    "text": [
+                      "Hi {$.name}, mohon menunggu sebentar Elsa akan menghubungkanmu ke rekan yang sedang bertugas."
+                    ]
+                  }
+                }
+              ],
+              "intent": {
+                "name": "projects/ariokiasisten/agent/intents/9e515650-99b7-4294-af16-e99ce9eb647b",
+                "displayName": "ads_reseller_konsul_assign_agent"
+              },
+              "intentDetectionConfidence": 1,
+              "languageCode": "en"
+            },
+            "agentId": "837e309e-a51d-4e22-8a6a-4732f49ddbc2"
+          },
+          "responseTime": "2025-12-19T00:58:44.384Z",
+          "deleteTime": "2027-01-23T00:58:44.384Z",
+          "logType": "DEFAULT",
+          "conversationResponseJson": "{\n  \"queryText\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\",\n  \"parameters\": {\n    \"url\": \"https://dsdsd.cloudfront.net/sdsd/image/upload/\"\n  },\n  \"fulfillmentText\": \"Hi {$.name}, mohon menunggu sebentar Elsa akan menghubungkanmu ke rekan yang sedang bertugas.\",\n  \"fulfillmentMessages\": [{\n    \"text\": {\n      \"text\": [\"Hi {$.name}, mohon menunggu sebentar Elsa akan menghubungkanmu ke rekan yang sedang bertugas.\"]\n    },\n    \"lang\": \"en\"\n  }],\n  \"intent\": {\n    \"id\": \"9e515650-99b7-4294-af16-e99ce9eb647b\",\n    \"displayName\": \"ads_reseller_konsul_assign_agent\",\n    \"priority\": 500000,\n    \"inputContextNames\": [\"ads_reseller_konsul_input_foto_3\"],\n    \"parameters\": [{\n      \"id\": \"d95f2d42-667b-4226-b86b-f4984d7dd5ae\",\n      \"displayName\": \"url\",\n      \"value\": \"$url\",\n      \"entityTypeDisplayName\": \"@sys.url\"\n    }],\n    \"messages\": [{\n      \"text\": {\n        \"text\": [\"Hi {$.name}, mohon menunggu sebentar Elsa akan menghubungkanmu ke rekan yang sedang bertugas.\"]\n      },\n      \"lang\": \"en\"\n    }],\n    \"rootFollowupIntentId\": \"dec073cd-b196-48ea-9020-9d8cbefdc92b\",\n    \"parentFollowupIntentId\": \"2b3eb017-8595-4d78-9215-1fab6eaab0e0\"\n  },\n  \"intentDetectionConfidence\": 1.0,\n  \"languageCode\": \"en\",\n  \"slotfillingMetadata\": {\n    \"allRequiredParamsPresent\": true\n  },\n  \"id\": \"ebb7668f-2e07-4350-9c79-68d0d5ab3f47-f8d7588c\",\n  \"sessionId\": \"cea3ca28-45c1-c0a7-f7d7-f82531e8745e\",\n  \"timestamp\": \"2025-12-19T00:58:44.383559Z\",\n  \"source\": \"agent\",\n  \"webhookStatus\": {\n    \"webhookEnabledForAgent\": true\n  },\n  \"agentEnvironmentId\": {\n    \"agentId\": \"837e309e-a51d-4e22-8a6a-4732f49ddbc2\",\n    \"cloudProjectId\": \"ariokiasisten\"\n  },\n  \"queriedIntentsCount\": 11\n}"
+        }
+      ],
+      "name": "projects/ariokiasisten/locations/global/agent/environments/draft/sessions/ae62988cf2e635bccb8a36e9e5c94202814a2ce18f3574140259f54b6d2531b0/conversations/1766105822729"
+    }
+  ]
+}

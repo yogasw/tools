@@ -1,0 +1,303 @@
+{
+  "intents": [
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/1280a533-53e4-4556-88f8-74dbd156b9b0",
+      "displayName": "ads_reseller_konsul_input_foto_1_fallback",
+      "priority": 500000,
+      "isFallback": true,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1"
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1",
+          "lifespanCount": 1
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak depan* ."
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/82f02477-47c2-4140-9f8f-ecdecf94f742"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/18701a05-7d03-4777-8c6a-a43c2885017e",
+      "displayName": "ads_reseller_konsul_input_foto_2",
+      "priority": 500000,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1"
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_2",
+          "lifespanCount": 1
+        }
+      ],
+      "parameters": [
+        {
+          "name": "68219094-9f05-4bd7-accb-220c47a1e2f0",
+          "displayName": "url",
+          "value": "$url",
+          "entityTypeDisplayName": "@sys.url"
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Mohon untuk mengirimkan sisi foto *tampak kiri* pada area yang ingin di konsultasikan ya."
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/82f02477-47c2-4140-9f8f-ecdecf94f742"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/1dd59bb4-ca99-4542-9f10-e395ad88cb05",
+      "displayName": "ads_reseller_konsul_input_foto_3_fallback",
+      "priority": 500000,
+      "isFallback": true,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_3"
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_3",
+          "lifespanCount": 1
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak kanan*."
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/2b3eb017-8595-4d78-9215-1fab6eaab0e0"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/2b3eb017-8595-4d78-9215-1fab6eaab0e0",
+      "displayName": "ads_reseller_konsul_input_foto_3",
+      "priority": 500000,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_2"
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_3",
+          "lifespanCount": 1
+        }
+      ],
+      "parameters": [
+        {
+          "name": "70385b4d-e7ae-439d-b703-32ffbfe6c909",
+          "displayName": "url",
+          "value": "$url",
+          "entityTypeDisplayName": "@sys.url"
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Mohon untuk mengirimkan sisi foto *tampak kanan* pada area yang ingin di konsultasikan ya."
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/18701a05-7d03-4777-8c6a-a43c2885017e"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/4fe9c091-cd8f-438d-8194-c5a36a7ba0ff",
+      "displayName": "ads_reseller_konsul_input_foto_2_fallback",
+      "priority": 500000,
+      "isFallback": true,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_2"
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_2",
+          "lifespanCount": 1
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Maaf, balasan Anda belum sesuai, silahkan upload foto *tampak kiri*."
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/18701a05-7d03-4777-8c6a-a43c2885017e"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/580dc7eb-ce14-4d82-ba42-1b9d7e06b60b",
+      "displayName": "test - fallback",
+      "priority": 500000,
+      "isFallback": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/test-followup"
+      ],
+      "action": "test.test-fallback",
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "halo test fallback"
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/f21d8c68-8dfd-483c-b705-c5f4daa03500",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/f21d8c68-8dfd-483c-b705-c5f4daa03500",
+      "mlDisabled": true
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/82f02477-47c2-4140-9f8f-ecdecf94f742",
+      "displayName": "ads_reseller_konsul_input_foto_1",
+      "priority": 500000,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul"
+      ],
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_1",
+          "lifespanCount": 1
+        }
+      ],
+      "parameters": [
+        {
+          "name": "d631f39d-db59-4f71-ba20-f2958e564062",
+          "displayName": "any",
+          "value": "$any",
+          "entityTypeDisplayName": "@sys.any"
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Mohon untuk mengirimkan sisi foto *tampak depan* pada area yang ingin di konsultasikan ya.\n"
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/843276a0-e0df-4714-a650-c8babe7e9739",
+      "displayName": "test - custom",
+      "priority": 500000,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/test-followup"
+      ],
+      "action": "test.test-custom",
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "custom"
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/f21d8c68-8dfd-483c-b705-c5f4daa03500",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/f21d8c68-8dfd-483c-b705-c5f4daa03500"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/9e515650-99b7-4294-af16-e99ce9eb647b",
+      "displayName": "ads_reseller_konsul_assign_agent",
+      "priority": 500000,
+      "mlEnabled": true,
+      "inputContextNames": [
+        "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul_input_foto_3"
+      ],
+      "parameters": [
+        {
+          "name": "d95f2d42-667b-4226-b86b-f4984d7dd5ae",
+          "displayName": "url",
+          "value": "$url",
+          "entityTypeDisplayName": "@sys.url"
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Hi {$.name}, mohon menunggu sebentar Elsa akan menghubungkanmu ke rekan yang sedang bertugas."
+            ]
+          }
+        }
+      ],
+      "rootFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "parentFollowupIntentName": "projects/ariokiasisten/locations/global/agent/intents/2b3eb017-8595-4d78-9215-1fab6eaab0e0"
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/dec073cd-b196-48ea-9020-9d8cbefdc92b",
+      "displayName": "ads_reseller_konsul",
+      "priority": 500000,
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/ads_reseller_konsul",
+          "lifespanCount": 1
+        }
+      ],
+      "messages": [
+        {
+          "text": {
+            "text": [
+              "Hi {$.name}, dengan saya Elsa yang akan membantumu hari ini.\n\nMohon lengkapi form berikut tanpa merubah format untuk melanjutkan proses konsultasi"
+            ]
+          }
+        },
+        {
+          "text": {
+            "text": [
+              "*Form Pendaftaran Konsultasi Reseller*\n\nNama Pasien :\nTanggal Lahir :\nJenis Kelamin :\nNo HP :\nKeluhan :"
+            ]
+          }
+        }
+      ],
+      "mlDisabled": true
+    },
+    {
+      "name": "projects/ariokiasisten/locations/global/agent/intents/f21d8c68-8dfd-483c-b705-c5f4daa03500",
+      "displayName": "test",
+      "priority": 500000,
+      "mlEnabled": true,
+      "outputContexts": [
+        {
+          "name": "projects/ariokiasisten/locations/global/agent/sessions/-/contexts/test-followup",
+          "lifespanCount": 2
+        }
+      ],
+      "messages": [
+        {
+          "text": {}
+        }
+      ]
+    }
+  ]
+}

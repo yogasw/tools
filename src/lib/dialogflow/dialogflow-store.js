@@ -33,7 +33,9 @@ export const configCookie = createPersistentStore(STORAGE_KEYS.cookie);
 
 // App state stores
 export const historyData = writable(null);
+export const allIntents = writable([]); // All intents from API
 export const isLoading = writable(false);
+export const isLoadingIntents = writable(false);
 export const error = writable(null);
 export const selectedSessionIndex = writable(-1);
 export const openTabs = writable([]);
@@ -41,6 +43,7 @@ export const activeTabIndex = writable(0);
 export const historySearchQuery = writable('');
 export const detailSearchQuery = writable('');
 export const detailViewMode = writable('chat');
+export const intentViewMode = writable('summary'); // 'summary' or 'all'
 
 // Filtered history list
 export const filteredHistory = derived(

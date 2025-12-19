@@ -4,10 +4,63 @@ import {
   configAuthorization,
   configCookie,
   historyData,
+  allIntents,
   isLoading,
+  isLoadingIntents,
   error,
   resetState
 } from './dialogflow-store.js';
+
+/**
+ * Parse config URL to extract base path, project name, and key
+ * Example URL: https://dialogflow.clients6.google.com/v2beta1/projects/ariokiasisten/locations/global/agent/environments/draft/sessions/-:listConversations?...&key=xyz
+ */
+export function parseConfigUrl(url) {
+  if (!url) return null;
+  
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    
+    // Extract project name from path: /v2beta1/projects/{PROJECT}/locations/...
+    const projectMatch = pathname.match(/\/projects\/([^\/]+)\//);
+    const projectName = projectMatch ? projectMatch[1] : null;
+    
+    // Extract key from query params
+    const key = urlObj.searchParams.get('key');
+    
+    // Build base URL (origin + up to /agent/)
+    const agentPathMatch = pathname.match(/(.*\/agent)\//);
+    const basePath = agentPathMatch ? agentPathMatch[1] : pathname.split('/agent/')[0] + '/agent';
+    const baseUrl = urlObj.origin + basePath;
+    
+    return {
+      origin: urlObj.origin,
+      projectName,
+      key,
+      baseUrl,
+      fullUrl: url
+    };
+  } catch (e) {
+    console.error('Error parsing URL:', e);
+    return null;
+  }
+}
+
+/**
+ * Build intents URL from parsed config
+ */
+export function buildIntentsUrl(parsedUrl) {
+  if (!parsedUrl?.baseUrl) return null;
+  
+  const params = new URLSearchParams();
+  params.append('pageSize', '1000');
+  if (parsedUrl.key) {
+    params.append('key', parsedUrl.key);
+  }
+  
+  return `${parsedUrl.baseUrl}/intents?${params.toString()}`;
+}
 
 /**
  * Build headers for the Dialogflow API request
@@ -83,17 +136,22 @@ export async function fetchHistory() {
   try {
     const headers = buildHeaders();
     
-    const response = await fetch(url, {
-      method: 'GET',
-      headers,
-      credentials: 'include'
-    });
+    // Fetch history and intents in parallel
+    const [historyResponse] = await Promise.all([
+      fetch(url, {
+        method: 'GET',
+        headers,
+        credentials: 'include'
+      }),
+      // Fetch intents in background (don't await result)
+      fetchAllIntents().catch(err => console.warn('Failed to fetch intents:', err))
+    ]);
     
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    if (!historyResponse.ok) {
+      throw new Error(`HTTP ${historyResponse.status}: ${historyResponse.statusText}`);
     }
     
-    const rawData = await response.json();
+    const rawData = await historyResponse.json();
     const transformedData = transformData(rawData);
     
     historyData.set(transformedData);
@@ -107,6 +165,205 @@ export async function fetchHistory() {
     isLoading.set(false);
   }
 }
+
+/**
+ * Fetch all intents from Dialogflow API
+ */
+export async function fetchAllIntents() {
+  const url = get(configUrl);
+  const parsedUrl = parseConfigUrl(url);
+  
+  if (!parsedUrl) {
+    console.error('Could not parse config URL');
+    return null;
+  }
+  
+  const intentsUrl = buildIntentsUrl(parsedUrl);
+  if (!intentsUrl) {
+    console.error('Could not build intents URL');
+    return null;
+  }
+  
+  isLoadingIntents.set(true);
+  
+  try {
+    const headers = buildHeaders();
+    
+    const response = await fetch(intentsUrl, {
+      method: 'GET',
+      headers,
+      credentials: 'include'
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    const intents = data.intents || [];
+    
+    // Transform intents to include parent info
+    const transformedIntents = intents.map(intent => ({
+      name: intent.name,
+      displayName: intent.displayName,
+      parentDisplayName: intent.parentFollowupIntentName 
+        ? intents.find(i => i.name === intent.parentFollowupIntentName)?.displayName || null
+        : null,
+      isFallback: intent.isFallback || false,
+      inputContexts: intent.inputContextNames || [],
+      outputContexts: intent.outputContexts?.map(c => c.name) || [],
+      events: intent.events || [],
+      trainingPhrases: intent.trainingPhrases?.length || 0,
+      priority: intent.priority || 0,
+      rootFollowupIntentName: intent.rootFollowupIntentName || null,
+      parentFollowupIntentName: intent.parentFollowupIntentName || null
+    }));
+    
+    allIntents.set(transformedIntents);
+    return transformedIntents;
+  } catch (err) {
+    console.error('Fetch intents error:', err);
+    return null;
+  } finally {
+    isLoadingIntents.set(false);
+  }
+}
+
+/**
+ * Build hierarchical tree from intents using parent references
+ * Unit tested - see intentTree.test.js
+ * 
+ * @param {Array} allIntentsList - List of all intents from API
+ * @param {Object} sessionData - Session data with interactions
+ * @param {boolean} summaryOnly - If true, only show intents in conversation path
+ * @returns {Object} Tree structure with roots array
+ */
+export function buildIntentTree(allIntentsList, sessionData, summaryOnly = false) {
+  // Step 1: Build interactions map from session data
+  // Key: intent ID (last part of name), Value: { count, history, first }
+  const interactions = new Map();
+  let firstFound = false;
+  
+  sessionData?.interactions?.forEach((interaction, n) => {
+    const v2Response = interaction.v2Response;
+    const intentName = v2Response?.queryResult?.intent?.name;
+    if (!intentName) return;
+    
+    const intentId = intentName.split('/').pop();
+    
+    if (interactions.has(intentId)) {
+      const existing = interactions.get(intentId);
+      existing.count += 1;
+      existing.history = `${existing.history},${n + 1}`;
+    } else {
+      const entry = {
+        count: 1,
+        history: `${n + 1}`,
+        first: false
+      };
+      if (!firstFound) {
+        firstFound = true;
+        entry.first = true;
+      }
+      interactions.set(intentId, entry);
+    }
+  });
+  
+  // Step 2: Create intent lookup map (by ID)
+  const listIntent = new Map();
+  allIntentsList.forEach(intent => {
+    const intentId = intent.name?.split('/').pop();
+    if (intentId) {
+      listIntent.set(intentId, intent);
+    }
+  });
+  
+  // Step 3: Build all nodes first
+  const nodeMap = new Map();
+  
+  allIntentsList.forEach(intent => {
+    const intentId = intent.name?.split('/').pop();
+    const parentId = intent.parentFollowupIntentName?.split('/').pop() || null;
+    
+    const interaction = interactions.get(intentId);
+    const active = !!interaction;
+    
+    const node = {
+      id: intentId,
+      displayName: intent.displayName,
+      isFallback: intent.isFallback || false,
+      parentId: parentId,
+      active: active,
+      count: interaction?.count || 0,
+      history: interaction?.history || '',
+      first: interaction?.first || false,
+      children: []
+    };
+    
+    nodeMap.set(intentId, node);
+  });
+  
+  // Step 4: Build parent-child relationships
+  const roots = [];
+  
+  nodeMap.forEach(node => {
+    if (node.parentId && nodeMap.has(node.parentId)) {
+      const parent = nodeMap.get(node.parentId);
+      parent.children.push(node);
+    } else {
+      // No parent or parent not found - this is a root
+      roots.push(node);
+    }
+  });
+  
+  // Step 5: Sort - alphabetically by displayName within same level
+  function sortNodes(nodes) {
+    nodes.sort((a, b) => a.displayName.localeCompare(b.displayName));
+    nodes.forEach(node => {
+      if (node.children.length > 0) {
+        sortNodes(node.children);
+      }
+    });
+  }
+  
+  sortNodes(roots);
+  
+  // Step 6: Filter for summaryOnly mode if needed
+  if (summaryOnly) {
+    function hasActiveDescendant(node) {
+      if (node.active) return true;
+      return node.children.some(hasActiveDescendant);
+    }
+    
+    function filterTree(nodes) {
+      return nodes.filter(node => {
+        if (node.active || hasActiveDescendant(node)) {
+          node.children = filterTree(node.children);
+          return true;
+        }
+        return false;
+      });
+    }
+    
+    const filteredRoots = filterTree(roots);
+    return { 
+      roots: filteredRoots, 
+      nodeMap, 
+      interactions,
+      totalNodes: Array.from(nodeMap.values()).length,
+      activeNodes: Array.from(nodeMap.values()).filter(n => n.active).length
+    };
+  }
+  
+  return { 
+    roots, 
+    nodeMap, 
+    interactions,
+    totalNodes: Array.from(nodeMap.values()).length,
+    activeNodes: Array.from(nodeMap.values()).filter(n => n.active).length
+  };
+}
+
 
 /**
  * Extract chat interactions from a session (combined user+bot per interaction)

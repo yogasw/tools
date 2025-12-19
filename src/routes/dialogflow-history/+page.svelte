@@ -177,7 +177,7 @@
           {#if $detailViewMode === 'chat'}
             <ChatView messages={chatMessages} searchQuery={$detailSearchQuery} />
           {:else}
-            <IntentView intents={intentHistory} searchQuery={$detailSearchQuery} />
+            <IntentView sessionData={$currentTabData?.data} searchQuery={$detailSearchQuery} />
           {/if}
         </div>
       {/if}
