@@ -8,7 +8,9 @@ import {
   isLoading,
   isLoadingIntents,
   error,
-  resetState
+  resetState,
+  configPageSize,
+  configInteractionsPageSize
 } from './dialogflow-store.js';
 
 /**
@@ -137,11 +139,26 @@ export async function fetchHistory(preserveState = false) {
   }
   
   try {
+    // Append config params to URL
+    let fetchUrl = url;
+    try {
+      const urlObj = new URL(url);
+      const pageSize = get(configPageSize);
+      const interactionsPageSize = get(configInteractionsPageSize);
+      
+      if (pageSize) urlObj.searchParams.set('pageSize', pageSize);
+      if (interactionsPageSize) urlObj.searchParams.set('interactionsPageSize', interactionsPageSize);
+      
+      fetchUrl = urlObj.toString();
+    } catch (e) {
+      console.warn('Invalid URL format, using original', e);
+    }
+
     const headers = buildHeaders();
     
     // Fetch history and intents in parallel
     const [historyResponse] = await Promise.all([
-      fetch(url, {
+      fetch(fetchUrl, {
         method: 'GET',
         headers,
         credentials: 'include'
