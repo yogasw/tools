@@ -10,21 +10,72 @@
   
   // -- ZOOM STATE --
   let scale = 1;
-  const ZOOM_STEP = 0.1;
   const MIN_ZOOM = 0.1;
-  const MAX_ZOOM = 2.0;
+  const MAX_ZOOM = 3.0;
+  const ZOOM_SENSITIVITY = 0.002; // For smooth wheel zoom
+
+  let zoomContainer; // Reference to scrollable container
 
   function zoomIn() {
-    scale = Math.min(scale + ZOOM_STEP, MAX_ZOOM);
+    scale = Math.min(scale * 1.15, MAX_ZOOM);
   }
   
   function zoomOut() {
-    scale = Math.max(scale - ZOOM_STEP, MIN_ZOOM);
+    scale = Math.max(scale / 1.15, MIN_ZOOM);
   }
   
   function resetZoom() {
     scale = 1;
-    // Also reset positioning if we were to implement pan (not requested yet, just zoom)
+  }
+
+  // Handle Keyboard Zoom Shortcuts (Ctrl/Cmd +/-, 0)
+  function handleKeydown(e) {
+    if (e.ctrlKey || e.metaKey) {
+      if (e.key === '=' || e.key === '+') {
+        e.preventDefault();
+        zoomIn();
+      } else if (e.key === '-') {
+        e.preventDefault();
+        zoomOut();
+      } else if (e.key === '0') {
+        e.preventDefault();
+        resetZoom();
+      }
+    }
+  }
+
+  // Handle Wheel Zoom (Ctrl/Cmd + Scroll) with cursor focus
+  function handleWheel(e) {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    
+    e.preventDefault();
+    
+    const container = zoomContainer;
+    if (!container) return;
+    
+    const rect = container.getBoundingClientRect();
+    
+    // Mouse position relative to container viewport
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+    
+    // Point under mouse in "unscaled" content coordinates
+    const pointX = (container.scrollLeft + offsetX) / scale;
+    const pointY = (container.scrollTop + offsetY) / scale;
+    
+    // Calculate new scale (exponential for smoothness)
+    const oldScale = scale;
+    const zoomFactor = Math.exp(-e.deltaY * ZOOM_SENSITIVITY);
+    const newScale = Math.min(Math.max(oldScale * zoomFactor, MIN_ZOOM), MAX_ZOOM);
+    
+    scale = newScale;
+    
+    // Adjust scroll to keep point under cursor
+    // Need to defer slightly so scale changes take effect on layout
+    requestAnimationFrame(() => {
+      container.scrollLeft = (pointX * newScale) - offsetX;
+      container.scrollTop = (pointY * newScale) - offsetY;
+    });
   }
 
   // -- SEARCH STATE --
@@ -264,6 +315,8 @@
   }
 </script>
 
+<svelte:window on:keydown={handleKeydown} />
+
 <div class="h-full flex flex-col overflow-hidden relative">
   <!-- Top Bar: View Mode + Search Mode + Zoom -->
   <div class="flex-shrink-0 flex flex-col gap-2 p-3 bg-white dark:bg-[#1a1a1a] border-b border-gray-200 dark:border-gray-800 z-10 shadow-sm">
@@ -458,9 +511,9 @@
   
   <div class="flex-1 flex overflow-hidden">
     <!-- Content Area with Zoom -->
-    <div class="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0a0a] relative">
+    <div class="flex-1 overflow-auto bg-gray-50 dark:bg-[#0a0a0a] relative" bind:this={zoomContainer} on:wheel={handleWheel}>
         <div 
-          class="min-w-full min-h-full p-8 transition-transform duration-200 origin-top-left"
+          class="min-w-full min-h-full p-8 origin-top-left"
           style="transform: scale({scale}); width: {100/scale}%; height: {100/scale}%;"
           on:click={() => selectedNode = null}
         >
