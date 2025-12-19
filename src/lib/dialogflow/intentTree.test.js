@@ -114,16 +114,17 @@ export function buildIntentTree(allIntentsList, sessionData, summaryOnly = false
   });
   
   // Step 5: Sort - roots alphabetically, children by history order then alphabetically
-  function sortNodes(nodes) {
-    nodes.sort((a, b) => a.displayName.localeCompare(b.displayName));
-    nodes.forEach(node => {
-      if (node.children.length > 0) {
-        sortNodes(node.children);
-      }
-    });
-  }
+  // Step 5: Sort - roots alphabetically, children by history order then alphabetically
+  // function sortNodes(nodes) {
+  //   nodes.sort((a, b) => a.displayName.localeCompare(b.displayName));
+  //   nodes.forEach(node => {
+  //     if (node.children.length > 0) {
+  //       sortNodes(node.children);
+  //     }
+  //   });
+  // }
   
-  sortNodes(roots);
+  // sortNodes(roots);
   
   // Step 6: Filter for summaryOnly mode if needed
   if (summaryOnly) {
@@ -201,65 +202,62 @@ console.log(printTree(allResult.roots).join('\n'));
 const rootNames = allResult.roots.map(r => r.displayName);
 console.log('\nRoots:', rootNames);
 
-const expectedRoots = ['ads_reseller_konsul', 'test'];
+const expectedRoots = ['test', 'test2'];
 const rootsMatch = JSON.stringify(rootNames) === JSON.stringify(expectedRoots);
-console.log('✓ Roots are parallel (ads_reseller_konsul and test):', rootsMatch ? 'PASS' : 'FAIL');
+console.log('✓ Roots are parallel (test and test2):', rootsMatch ? 'PASS' : 'FAIL');
 
 // Validate tree order
 const expectedAllOrder = [
-  'ads_reseller_konsul',
-  'ads_reseller_konsul_input_foto_1',
-  'ads_reseller_konsul_input_foto_1_fallback',
-  'ads_reseller_konsul_input_foto_2',
-  'ads_reseller_konsul_input_foto_2_fallback',
-  'ads_reseller_konsul_input_foto_3',
-  'ads_reseller_konsul_assign_agent',
-  'ads_reseller_konsul_input_foto_3_fallback',
   'test',
+  'test - fallback',
+  'test - later',
+  'test - later - custom',
+  'test - later - custom - fallback',
+  'test - later - custom - fallback - yes',
+  'test - later - custom - fallback - custom',
+  'test - later - custom - fallback - custom - custom',
+  'test - later - custom - fallback - custom - cancel',
   'test - custom',
-  'test - fallback'
+  'test2',
+  'test2 - yes',
+  'test2 - yes - yes',
+  'test2 - custom',
+  'test2 - custom - fallback',
+  'test2 - yes-2',
+  'test2 - yes-2 - no',
+  'test2 - yes-2 - no - fallback'
 ];
 
 const actualAllOrder = getFlatTreeOrder(allResult.roots);
-console.log('\nExpected order:', expectedAllOrder);
+console.log('\\nExpected order:', expectedAllOrder);
 console.log('Actual order:  ', actualAllOrder);
 
 const allOrderMatch = JSON.stringify(actualAllOrder) === JSON.stringify(expectedAllOrder);
 console.log('✓ Tree order matches:', allOrderMatch ? 'PASS' : 'FAIL');
 
 // Test 2: Summary mode (summaryOnly = true) - only active intents
-console.log('\n--- Test 2: Summary Mode ---');
+console.log('\\n--- Test 2: Summary Mode ---');
 const summaryResult = buildIntentTree(intentData.intents, sessionData, true);
 
-console.log('\nSummary Tree Structure:');
-console.log(printTree(summaryResult.roots).join('\n'));
+console.log('\\nSummary Tree Structure:');
+console.log(printTree(summaryResult.roots).join('\\n'));
 
 // In summary mode, only intents in conversation should appear
 const summaryNames = getFlatTreeOrder(summaryResult.roots);
-console.log('\nSummary intents:', summaryNames);
+console.log('\\nSummary intents:', summaryNames);
 
 // Intents in conversation (from history):
-// 1. test
-// 2. test - fallback
-// 3. ads_reseller_konsul
-// 4. ads_reseller_konsul_input_foto_1
-// 5-8. ads_reseller_konsul_input_foto_1_fallback
-// 9. ads_reseller_konsul_input_foto_2
-// 10. ads_reseller_konsul_input_foto_3
-// 11. ads_reseller_konsul_assign_agent
+// Based on interactions in history_tmp.json
 
 const expectedSummaryOrder = [
-  'ads_reseller_konsul',
-  'ads_reseller_konsul_input_foto_1',
-  'ads_reseller_konsul_input_foto_1_fallback',
-  'ads_reseller_konsul_input_foto_2',
-  'ads_reseller_konsul_input_foto_3',
-  'ads_reseller_konsul_assign_agent',
   'test',
-  'test - fallback'
+  'test - later',
+  'test - later - custom',
+  'test - later - custom - fallback',
+  'test - custom'
 ];
 
-console.log('\nExpected summary order:', expectedSummaryOrder);
+console.log('\\nExpected summary order:', expectedSummaryOrder);
 console.log('Actual summary order:  ', summaryNames);
 
 const summaryOrderMatch = JSON.stringify(summaryNames) === JSON.stringify(expectedSummaryOrder);
