@@ -278,11 +278,11 @@ export const toolsRegistry = [
     category: "testing",
   },
   {
-    id: "dialogflow-history",
-    name: "Dialogflow History Tool",
-    description: "View and search Dialogflow conversation history",
+    id: "dialogflow-tools",
+    name: "Dialogflow Tools",
+    description: "Search, view, and analyze Dialogflow conversations and intents",
     seoTitle:
-      "Dialogflow History Tool - View Conversation Logs & Intent History",
+      "Dialogflow Tools - Search, View, and Analyze Dialogflow Conversations and Intents",
     seoDescription:
       "Free Dialogflow conversation history viewer. Search sessions, view chat logs, analyze intent history, debug webhook errors. Perfect for Dialogflow developers and support teams.",
     keywords: [

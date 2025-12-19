@@ -50,8 +50,8 @@
 </script>
 
 <svelte:head>
-  <title>Dialogflow History Tool</title>
-  <meta name="description" content="Modern tool for viewing and searching Dialogflow conversation history" />
+  <title>Dialogflow Tools</title>
+  <meta name="description" content="Modern tool for managing Dialogflow conversations and intents" />
 </svelte:head>
 
 <div class="h-full flex flex-col overflow-hidden">
@@ -60,7 +60,7 @@
     <div class="flex items-center justify-between px-4 py-3">
       <div class="flex-1">
         <h1 class="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          💬 Dialogflow History Tool
+          💬 Dialogflow Tools
         </h1>
         <p class="text-xs text-gray-600 dark:text-gray-400">
           View and search Dialogflow conversation history
