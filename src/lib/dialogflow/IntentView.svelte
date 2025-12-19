@@ -1,5 +1,5 @@
 <script>
-  import { allIntents, intentViewMode, isLoadingIntents } from '$lib/dialogflow/dialogflow-store.js';
+  import { allIntents, intentViewMode } from '$lib/dialogflow/dialogflow-store.js';
   import { fetchAllIntents, buildIntentTree } from '$lib/dialogflow/dialogflow-api.js';
   import IntentTreeNode from './IntentTreeNode.svelte';
   import { tick } from 'svelte';
@@ -209,20 +209,6 @@
         <span class="text-xs w-8 text-center text-gray-600 dark:text-gray-400">{Math.round(scale * 100)}%</span>
         <button on:click={zoomIn} class="w-6 h-6 flex items-center justify-center hover:bg-white dark:hover:bg-gray-700 rounded" title="Zoom In">+</button>
         <button on:click={resetZoom} class="text-xs px-2 hover:bg-white dark:hover:bg-gray-700 rounded" title="Reset">Reset</button>
-      </div>
-
-      <!-- Refresh button -->
-      <div class="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 ml-3">
-        <button
-          on:click={() => fetchAllIntents()}
-          disabled={$isLoadingIntents}
-          class="p-1 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
-          title="Refresh intents"
-        >
-          <svg class="w-4 h-4 {$isLoadingIntents ? 'animate-spin' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
       </div>
     </div>
     

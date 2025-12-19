@@ -9,10 +9,11 @@
     detailViewMode,
     currentTabData,
     closeTab,
-    selectTab
+    selectTab,
+    isLoadingIntents
   } from '$lib/dialogflow/dialogflow-store.js';
   
-  import { fetchHistory, extractChatMessages, extractIntentHistory } from '$lib/dialogflow/dialogflow-api.js';
+  import { fetchHistory, extractChatMessages, extractIntentHistory, refreshAllData } from '$lib/dialogflow/dialogflow-api.js';
   
   import ConfigPanel from '$lib/dialogflow/ConfigPanel.svelte';
   import HistoryList from '$lib/dialogflow/HistoryList.svelte';
@@ -44,6 +45,8 @@
   
   $: chatMessages = $currentTabData?.data ? extractChatMessages($currentTabData.data) : [];
   $: intentHistory = $currentTabData?.data ? extractIntentHistory($currentTabData.data) : [];
+  
+  $: isRefreshing = $isLoading || $isLoadingIntents;
 </script>
 
 <svelte:head>
@@ -169,6 +172,17 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
             Copy
+          </button>
+          
+          <button
+            on:click={() => refreshAllData()}
+            disabled={isRefreshing}
+            class="px-2 py-1.5 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50"
+            title="Refresh intents & history"
+          >
+            <svg class="w-4 h-4 {isRefreshing ? 'animate-spin' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
           </button>
         </div>
         

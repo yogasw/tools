@@ -121,7 +121,7 @@ function transformData(rawData) {
 /**
  * Fetch history from Dialogflow API
  */
-export async function fetchHistory() {
+export async function fetchHistory(preserveState = false) {
   const url = get(configUrl);
   
   if (!url) {
@@ -131,7 +131,10 @@ export async function fetchHistory() {
   
   isLoading.set(true);
   error.set(null);
-  resetState();
+  
+  if (!preserveState) {
+    resetState();
+  }
   
   try {
     const headers = buildHeaders();
@@ -432,4 +435,59 @@ export function extractIntentHistory(sessionData) {
       isFallback: intent?.isFallback || false
     };
   });
+}
+
+/**
+ * Refresh all data (History + Intents) while preserving selection state
+ */
+export async function refreshAllData() {
+  const { openTabs, activeTabIndex, selectedSessionIndex } = await import('./dialogflow-store.js');
+  
+  // 1. Capture current state
+  const currentTabs = get(openTabs);
+  const currentIndex = get(activeTabIndex);
+  const currentSessionIdx = get(selectedSessionIndex);
+  
+  // 2. Refresh data (preserve state = true)
+  // Fetch both history and intents in parallel
+  const [newData] = await Promise.all([
+    fetchHistory(true),
+    fetchAllIntents()
+  ]);
+  
+  if (!newData) return;
+  
+  // 3. Update tabs with fresh data
+  // We need to map old tabs to new data by Session ID to ensure we have the latest interactions
+  if (currentTabs.length > 0) {
+    const updatedTabs = currentTabs.map(tab => {
+      // Find matching session in new data
+      const match = newData.sessionConversations.find(
+        (conv) => conv.conversationResponse?.sessionId === tab.sessionId
+      );
+      
+      if (match) {
+        // Update tab data with fresh match
+        // Also update index if it changed (it might, if list order changed, though less likely with API)
+        return {
+          ...tab,
+          index: match.no - 1, // 'no' is 1-based index from transformData
+          data: match
+        };
+      }
+      return tab; // Keep stale if not found (or should we close it?)
+    });
+    
+    openTabs.set(updatedTabs);
+    
+    // Restore active tab index if valid
+    if (currentIndex < updatedTabs.length) {
+      activeTabIndex.set(currentIndex);
+    } else {
+      activeTabIndex.set(0);
+    }
+  }
+  
+  // 4. Restore selected session index if needed
+  // (Note: The store logic often couples openTabs and selectedSessionIndex, so update might be sufficient)
 }
