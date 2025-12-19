@@ -146,14 +146,19 @@
 
       return 0;
     });
+
+  // Check if current page's tool has fullScreen config
+  $: currentToolId = $page.url.pathname.slice(1); // Remove leading /
+  $: currentTool = $tools.find(t => t.id === currentToolId);
+  $: isFullScreen = currentTool?.fullScreen === true;
 </script>
 
 <svelte:window on:keydown={handleModalKeyDown} />
 
-<div class="min-h-screen bg-gray-50 dark:bg-[#0a0a0a] transition-colors">
+<div class="h-screen flex flex-col bg-gray-50 dark:bg-[#0a0a0a] transition-colors">
   <!-- Header -->
   <header
-    class="bg-white dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-gray-800"
+    class="flex-shrink-0 bg-white dark:bg-[#0a0a0a] border-b border-gray-200 dark:border-gray-800"
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-14">
@@ -210,10 +215,22 @@
     </div>
   </header>
 
-  <!-- Main Content -->
-  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <slot />
-  </main>
+  <!-- Main Content - Conditional layout based on tool config -->
+  {#if isFullScreen}
+    <!-- Full screen layout for tools like Dialogflow History -->
+    <main class="flex-1 min-h-0 overflow-hidden">
+      <div class="h-full">
+        <slot />
+      </div>
+    </main>
+  {:else}
+    <!-- Standard contained layout -->
+    <main class="flex-1 overflow-auto">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <slot />
+      </div>
+    </main>
+  {/if}
 </div>
 
 <!-- Search Modal -->
