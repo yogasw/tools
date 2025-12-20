@@ -310,6 +310,33 @@ export function importFromJson(
       }
     }
 
+
+    // 2. Special handling for User-Agent
+    const uaKey = findBestMatch(availableKeys, ['user_agent', 'user-agent', 'user-agent-data']);
+    if (uaKey) {
+       const uaVal = getNestedValue(data, uaKey);
+       if (typeof uaVal === 'string') {
+          if (!result.headers) result.headers = [];
+          const exists = result.headers.some(h => h.key.toLowerCase() === 'user-agent');
+          if (!exists) {
+             result.headers.push({ key: 'User-Agent', value: uaVal });
+          }
+       }
+    }
+
+    // 3. Body Prettifying
+    if (result.body && typeof result.body === 'string') {
+        try {
+            const trimmed = result.body.trim();
+            if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+                 const parsed = JSON.parse(trimmed);
+                 result.body = JSON.stringify(parsed, null, 2);
+            }
+        } catch (e) {
+            // Not a JSON string, keep as is
+        }
+    }
+
   } catch (e) {
     console.error("Import error", e);
     result.availableKeys = [];
