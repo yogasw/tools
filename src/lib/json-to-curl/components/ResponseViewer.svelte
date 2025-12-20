@@ -17,6 +17,8 @@
     responseTime?: number | null;
   } = $props();
 
+  let responseMode: 'raw' | 'viewer' | 'json-parser' = $state('raw');
+
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
   }
@@ -84,14 +86,55 @@
 
     {#if activeTab === 'response'}
        <div class="absolute inset-0 flex flex-col">
-          {#if responseTime}
-            <div class="mb-2 text-xs text-gray-500 dark:text-gray-400 flex items-center justify-end font-mono">
-              Time: {responseTime}ms
-            </div>
-          {/if}
-          <div class="flex-1 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
-             <!-- Note: JsonParser is imported from relative path -->
-             <JsonParser bind:inputText={response} hideHeader={true} />
+          <div class="flex items-center justify-between mb-2 px-1">
+             <div class="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1 text-xs font-medium">
+                <button 
+                  onclick={() => responseMode = 'raw'}
+                  class="px-3 py-1 rounded-md transition-all {responseMode === 'raw' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}"
+                >
+                  Raw
+                </button>
+                <button 
+                  onclick={() => responseMode = 'viewer'}
+                  class="px-3 py-1 rounded-md transition-all {responseMode === 'viewer' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}"
+                >
+                  Viewer
+                </button>
+                 <button 
+                  onclick={() => responseMode = 'json-parser'}
+                  class="px-3 py-1 rounded-md transition-all {responseMode === 'json-parser' ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}"
+                >
+                  JSON Parser
+                </button>
+             </div>
+
+              {#if responseTime}
+                <div class="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                  Time: {responseTime}ms
+                </div>
+              {/if}
+          </div>
+
+          <div class="flex-1 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden relative">
+             {#if responseMode === 'raw'}
+                <textarea 
+                  readonly 
+                  class="w-full h-full p-4 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-mono text-sm resize-none focus:outline-none"
+                  value={response}
+                ></textarea>
+             {:else if responseMode === 'viewer'}
+                <div class="w-full h-full bg-white relative">
+                   <iframe 
+                    title="Response Viewer"
+                    srcdoc={response}
+                    class="w-full h-full border-none"
+                    sandbox="allow-scripts"
+                  ></iframe>
+                </div>
+             {:else if responseMode === 'json-parser'}
+                <!-- Note: JsonParser is imported from relative path -->
+                <JsonParser bind:inputText={response} hideHeader={true} />
+             {/if}
           </div>
        </div>
     {/if}

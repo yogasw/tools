@@ -35,48 +35,74 @@
       
       <div class="p-6 space-y-6">
          <p class="text-sm text-gray-600 dark:text-gray-400">
-           Map keys from your imported JSON to the request fields. Updates are applied automatically.
+           Map keys from your imported JSON to the request fields. You can select a key or type a template variable (e.g. <code>$host/$path</code>).
          </p>
+
+         <datalist id="available-keys">
+            {#each availableImportKeys as key}
+              <option value={key}></option>
+            {/each}
+         </datalist>
 
          <div class="space-y-4">
             <!-- URL -->
             <div>
               <label for="modal-import-url" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">URL / Endpoint</label>
-              <select id="modal-import-url" bind:value={importConfig.url} class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
-                <option value="">-- Select Key --</option>
-                <option value="">(None)</option>
-                {#each availableImportKeys as key}<option value={key}>{key}</option>{/each}
-              </select>
+              <div class="relative">
+                 <input 
+                    type="text" 
+                    id="modal-import-url" 
+                    bind:value={importConfig.url} 
+                    list="available-keys"
+                    placeholder="Select key or type $variable/path"
+                    class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                 />
+              </div>
             </div>
             
             <!-- Method -->
             <div>
               <label for="modal-import-method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Method</label>
-              <select id="modal-import-method" bind:value={importConfig.method} class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
-                <option value="">-- Select Key --</option>
-                <option value="">(None)</option>
-                {#each availableImportKeys as key}<option value={key}>{key}</option>{/each}
-              </select>
+              <div class="relative">
+                 <input 
+                    type="text" 
+                    id="modal-import-method" 
+                    bind:value={importConfig.method} 
+                    list="available-keys"
+                    placeholder="Select key or type GET/POST"
+                    class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                 />
+               </div>
             </div>
 
             <!-- Headers -->
             <div>
               <label for="modal-import-headers" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Headers</label>
-              <select id="modal-import-headers" bind:value={importConfig.headers} class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
-                 <option value="">-- Select Key --</option>
-                 <option value="">(None)</option>
-                {#each availableImportKeys as key}<option value={key}>{key}</option>{/each}
-              </select>
+              <div class="relative">
+                 <input 
+                    type="text" 
+                    id="modal-import-headers" 
+                    bind:value={importConfig.headers} 
+                    list="available-keys"
+                    placeholder="Select key for headers object"
+                    class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                 />
+              </div>
             </div>
 
             <!-- Body -->
             <div>
               <label for="modal-import-body" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Body / Payload</label>
-              <select id="modal-import-body" bind:value={importConfig.body} class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500">
-                <option value="">-- Select Key --</option>
-                <option value="">(None)</option>
-                {#each availableImportKeys as key}<option value={key}>{key}</option>{/each}
-              </select>
+              <div class="relative">
+                 <input 
+                    type="text" 
+                    id="modal-import-body" 
+                    bind:value={importConfig.body} 
+                    list="available-keys"
+                    placeholder="Select key for body"
+                    class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                 />
+              </div>
             </div>
          </div>
       </div>

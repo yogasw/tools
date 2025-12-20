@@ -268,10 +268,10 @@ export const toolsRegistry = [
     fullScreen: true,
     // Default field mappings for Import feature - user can customize or extend
     defaultMappings: {
-      url: ['url', 'endpoint', 'path', 'uri', 'request_url', 'target'],
-      method: ['method', 'type', 'verb', 'http_method', 'request_method'],
+      url: ['url', 'endpoint', 'path', 'uri', 'request_url', 'target', 'https://$host$path'],
+      method: ['method', 'type', 'http_method', 'request_method'],
       headers: ['headers', 'header', 'request_headers', 'http_headers'],
-      body: ['body', 'payload', 'data', 'content', 'request_body', 'params']
+      body: ['body', 'payload', 'data', 'content', 'request_body']
     }
   },
   {

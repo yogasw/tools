@@ -3,21 +3,18 @@
     generateCurlCommand, 
     generateHttpRequest, 
     importFromJson 
-  } from "../json-to-curl/core";
+  } from "./core";
   
-  import RequestEditor from "../json-to-curl/components/RequestEditor.svelte";
-  import ResponseViewer from "../json-to-curl/components/ResponseViewer.svelte";
-  import ImportConfigSidebar from "../json-to-curl/components/ImportConfig.svelte";
-  import MappingModal from "../json-to-curl/components/MappingModal.svelte";
+  import RequestEditor from "./components/RequestEditor.svelte";
+  import ResponseViewer from "./components/ResponseViewer.svelte";
+  import ImportConfigSidebar from "./components/ImportConfig.svelte";
+  import MappingModal from "./components/MappingModal.svelte";
 
   // State
   let method = $state("GET");
-  let url = $state("https://jsonplaceholder.typicode.com/posts/1");
-  let headers = $state([
-    { key: "Content-Type", value: "application/json" },
-    { key: "Authorization", value: "Bearer token123" }
-  ]);
-  let body = $state('{\n  "title": "foo",\n  "body": "bar",\n  "userId": 1\n}');
+  let url = $state("");
+  let headers = $state([]);
+  let body = $state("");
   
   let response = $state("");
   let activeTab = $state("curl");
@@ -44,18 +41,8 @@
   // Import Logic Effect
   $effect(() => {
     if (importJsonInput) {
-       // Only run import logic if we have input. 
-       // We pass the current config so we can trigger updates if mapping changes.
-       // Note: In Svelte 5, we should be careful about infinite loops if we update state that triggers this effect.
-       // However, importFromJson returns new values based on input and config.
-       
        const result = importFromJson(importJsonInput, importConfig);
        availableImportKeys = result.availableKeys;
-       
-       // Update config with defaults if new keys found and config was empty
-       // We only want to auto-set defaults if they are not set, to avoid overwriting user choices on every keystroke if they manually set it? 
-       // Actually `importFromJson` logic handles "defaults applied" in the returned config object if we want.
-       // But let's respect the current logic: the core function returns a config with defaults filled if they were empty.
        
        if (result.config.url && !importConfig.url) importConfig.url = result.config.url;
        if (result.config.method && !importConfig.method) importConfig.method = result.config.method;
@@ -67,6 +54,14 @@
        if (result.method) method = result.method;
        if (result.headers) headers = result.headers;
        if (result.body) body = result.body;
+    } else {
+      // Clear state when input is empty
+      url = "";
+      method = "GET";
+      headers = [];
+      body = "";
+      availableImportKeys = [];
+      // Optionally clear config? User might want to keep mapping if they just clear text to paste new text.
     }
   });
 
@@ -122,18 +117,11 @@
           Build requests, generate CURL commands, and simulate API calls
         </p>
       </div>
-      <button
-        onclick={() => showImportSidebar = !showImportSidebar}
-        class="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-      >
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-        {showImportSidebar ? 'Hide Import Config' : 'Show Import Config'}
-      </button>
     </div>
   </div>
 
   <!-- Main Content Area with Split View -->
-  <div class="flex-1 flex overflow-hidden">
+  <div class="flex-1 flex overflow-hidden relative">
     
     {#if showImportSidebar}
       <ImportConfigSidebar 
@@ -142,9 +130,22 @@
       />
     {/if}
 
+    <!-- Sidebar Toggle (Floating/Sticky) -->
+    <div class="relative z-10 flex flex-col justify-center pointer-events-none">
+       <button
+        onclick={() => showImportSidebar = !showImportSidebar}
+        class="pointer-events-auto absolute transform transition-all duration-300 p-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 z-20 group {showImportSidebar ? 'left-0 -translate-x-1/2' : 'left-4 translate-x-0'}"
+        title={showImportSidebar ? "Collapse Sidebar" : "Expand Sidebar"}
+      >
+        <svg class="w-4 h-4 transition-transform {showImportSidebar ? '' : 'rotate-180'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+    </div>
+
     <!-- Right Content: Request Builder & Output -->
-    <div class="flex-1 overflow-auto p-4 bg-gray-50 dark:bg-gray-900">
-      <div class="max-w-5xl mx-auto space-y-6">
+    <div class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900 transition-all duration-300 {showImportSidebar ? 'p-4' : 'p-6 lg:p-8'}">
+      <div class="{showImportSidebar ? 'max-w-5xl' : 'max-w-7xl'} mx-auto space-y-6 transition-all duration-300">
         
         <RequestEditor 
           bind:method 
