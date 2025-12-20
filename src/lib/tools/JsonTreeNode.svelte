@@ -2,14 +2,14 @@
   export let value;
   export let path;
   export let keyName = '';
-  export let isExpanded;
+  export let expandedNodes; // Received as prop
   export let toggleNode;
 
   $: isObject = value !== null && typeof value === 'object' && !Array.isArray(value);
   $: isArray = Array.isArray(value);
   $: isPrimitive = !isObject && !isArray;
   $: currentPath = path ? (keyName ? `${path}.${keyName}` : path) : keyName;
-  $: expanded = isExpanded(currentPath);
+  $: expanded = expandedNodes.has(currentPath); // Reacts when expandedNodes updates
   
   function handleToggle() {
     toggleNode(currentPath);
@@ -91,7 +91,7 @@
               value={item}
               keyName={`[${index}]`}
               path={currentPath}
-              {isExpanded}
+              {expandedNodes}
               {toggleNode}
             />
           {/each}
@@ -101,7 +101,7 @@
               value={val}
               keyName={key}
               path={currentPath}
-              {isExpanded}
+              {expandedNodes}
               {toggleNode}
             />
           {/each}

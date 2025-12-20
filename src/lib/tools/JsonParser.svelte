@@ -19,27 +19,26 @@
   let keysInput;
   let suggestionsContainer;
 
-  function expandAllNodes(obj, path = "") {
-    if (obj && typeof obj === "object") {
-      expandedNodes.add(path);
+  function expandAllNodes(obj, path = "", set = expandedNodes) {
+    set.add(path);
 
+    if (obj && typeof obj === "object") {
       if (Array.isArray(obj)) {
         obj.forEach((item, index) => {
           const newPath = path ? `${path}.[${index}]` : `[${index}]`;
-          expandAllNodes(item, newPath);
+          expandAllNodes(item, newPath, set);
         });
       } else {
         Object.keys(obj).forEach((key) => {
           const newPath = path ? `${path}.${key}` : key;
-          expandAllNodes(obj[key], newPath);
+          expandAllNodes(obj[key], newPath, set);
         });
       }
     }
   }
 
   function collapseAllNodes() {
-    expandedNodes.clear();
-    expandedNodes = expandedNodes;
+    expandedNodes = new Set();
   }
 
   function parseJsonString(jsonString) {
@@ -174,9 +173,10 @@
       try {
         parsedOutput = JSON.parse(result);
         // Auto expand all nodes by default
-        expandedNodes.clear();
-        expandAllNodes(parsedOutput, "");
-        expandedNodes = expandedNodes; // trigger reactivity
+        parsedOutput = JSON.parse(result);
+        const newExpanded = new Set();
+        expandAllNodes(parsedOutput, "", newExpanded);
+        expandedNodes = newExpanded;
       } catch (e) {
         parsedOutput = result;
       }
@@ -186,12 +186,13 @@
   }
 
   function toggleNode(path) {
-    if (expandedNodes.has(path)) {
-      expandedNodes.delete(path);
+    const newExpanded = new Set(expandedNodes);
+    if (newExpanded.has(path)) {
+      newExpanded.delete(path);
     } else {
-      expandedNodes.add(path);
+      newExpanded.add(path);
     }
-    expandedNodes = expandedNodes; // trigger reactivity
+    expandedNodes = newExpanded;
   }
 
   function isExpanded(path) {
@@ -681,8 +682,9 @@
           {#if viewMode === "tree" && outputText}
             <button
               on:click={() => {
-                expandAllNodes(parsedOutput, "");
-                expandedNodes = expandedNodes;
+                const newExpanded = new Set();
+                expandAllNodes(parsedOutput, "", newExpanded);
+                expandedNodes = newExpanded;
               }}
               class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
@@ -745,7 +747,7 @@
               <JsonTreeNode
                 value={parsedOutput}
                 path=""
-                {isExpanded}
+                {expandedNodes}
                 {toggleNode}
               />
             </div>
