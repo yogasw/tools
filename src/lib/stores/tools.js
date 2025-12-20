@@ -233,6 +233,48 @@ export const toolsRegistry = [
     fullScreen: true,
   },
   {
+    id: "json-to-curl",
+    name: "JSON to Curl",
+    description: "Convert JSON Request to Curl and simulate request",
+    seoTitle: "Free JSON to Curl Converter - Simulate API Requests Online",
+    seoDescription:
+      "Free online JSON to Curl converter and API request simulator. Build HTTP requests with headers and body, generate Curl commands, and preview raw HTTP requests. Test APIs directly from your browser.",
+    keywords: [
+      "json to curl",
+      "curl generator",
+      "api simulator",
+      "http request builder",
+      "curl command builder",
+      "test api online",
+      "api testing tool",
+      "rest api client",
+      "json body to curl",
+    ],
+    searchTerms: [
+      "how to convert json to curl",
+      "generate curl from json",
+      "simulate http request online",
+      "api request builder free",
+      "curl command generator",
+    ],
+    ogTitle: "Free JSON to Curl Converter & API Simulator",
+    ogDescription:
+      "Convert JSON requests to Curl commands and simulate API calls online.",
+    ogImage: "/og-json-curl.png",
+    canonical: "https://tools.yogasw.my.id/json-to-curl",
+    icon: "🚀",
+    type: "internal",
+    category: "converter",
+    fullScreen: true,
+    // Default field mappings for Import feature - user can customize or extend
+    defaultMappings: {
+      url: ['url', 'endpoint', 'path', 'uri', 'request_url', 'target'],
+      method: ['method', 'type', 'verb', 'http_method', 'request_method'],
+      headers: ['headers', 'header', 'request_headers', 'http_headers'],
+      body: ['body', 'payload', 'data', 'content', 'request_body', 'params']
+    }
+  },
+  {
     id: "beo-echo",
     name: "Beo Echo",
     description: "Beo echo is api mocking tools for testing and development",
