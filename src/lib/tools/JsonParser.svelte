@@ -1,7 +1,10 @@
 <script>
   import JsonTreeNode from "./JsonTreeNode.svelte";
+  import { parseJsonString, processData, getValuePreview, extractKeys } from "./jsonParserUtils.js";
 
-  let inputText = "";
+  export let inputText = "";
+  export let hideHeader = false;
+  export let hideOutput = false;  // Hide output section, only show input + keys
   let keysToParse = "";
   let outputText = "";
   let parsedOutput = null;
@@ -19,136 +22,26 @@
   let keysInput;
   let suggestionsContainer;
 
-  function expandAllNodes(obj, path = "") {
-    if (obj && typeof obj === "object") {
-      expandedNodes.add(path);
+  function expandAllNodes(obj, path = "", set = expandedNodes) {
+    set.add(path);
 
+    if (obj && typeof obj === "object") {
       if (Array.isArray(obj)) {
         obj.forEach((item, index) => {
           const newPath = path ? `${path}.[${index}]` : `[${index}]`;
-          expandAllNodes(item, newPath);
+          expandAllNodes(item, newPath, set);
         });
       } else {
         Object.keys(obj).forEach((key) => {
           const newPath = path ? `${path}.${key}` : key;
-          expandAllNodes(obj[key], newPath);
+          expandAllNodes(obj[key], newPath, set);
         });
       }
     }
   }
 
   function collapseAllNodes() {
-    expandedNodes.clear();
-    expandedNodes = expandedNodes;
-  }
-
-  function parseJsonString(jsonString) {
-    // For Ruby format
-    let oldString = jsonString;
-    try {
-      jsonString = jsonString.replace(/=>/g, ":");
-      jsonString = jsonString.replace(/nil/g, "null");
-      return JSON.parse(jsonString);
-    } catch (e) {
-      // Restore original string if Ruby parsing fails
-      jsonString = oldString;
-    }
-
-    // Fixing the JSON string which might contain escape characters
-    let fixedJsonString = jsonString.replace(/\\"/g, '\\"');
-
-    // Replacing single quotes with double quotes
-    fixedJsonString = fixedJsonString.replace(/'/g, '"');
-
-    // For Python format
-    fixedJsonString = fixedJsonString.replace(/None/g, "null");
-    fixedJsonString = fixedJsonString.replace(/True/g, "true");
-    fixedJsonString = fixedJsonString.replace(/False/g, "false");
-
-    return JSON.parse(fixedJsonString);
-  }
-
-  function processData(input, listArrayKey) {
-    let parsedInput = null;
-    try {
-      parsedInput = JSON.parse(input);
-    } catch (e) {
-      parsedInput = parseJsonString(input);
-    }
-
-    if (!listArrayKey || listArrayKey.length === 0 || listArrayKey[0] === "") {
-      return JSON.stringify(parsedInput, null, 2);
-    } else {
-      let current = parsedInput;
-
-      for (let i = 0; i < listArrayKey.length; i++) {
-        let key = listArrayKey[i].trim();
-
-        // Handle array[0] or object.key or [0] format
-        if (key.includes("[") && key.includes("]")) {
-          // Split by array notation: e.g., "buttons[0]" or "[0]"
-          const match = key.match(/^(.+?)?\[(\d+)\]$/);
-          if (match) {
-            const objKey = match[1]; // could be undefined for "[0]"
-            const index = parseInt(match[2]);
-
-            // First access object key if exists
-            if (
-              objKey &&
-              current &&
-              typeof current === "object" &&
-              !Array.isArray(current)
-            ) {
-              current = current[objKey];
-            }
-
-            // Then access array index
-            if (Array.isArray(current) && current[index] !== undefined) {
-              current = current[index];
-            } else {
-              current = undefined;
-              break;
-            }
-          }
-        } else {
-          // Regular object key access
-          if (
-            current &&
-            typeof current === "object" &&
-            !Array.isArray(current) &&
-            current.hasOwnProperty(key)
-          ) {
-            current = current[key];
-          } else {
-            current = undefined;
-            break;
-          }
-        }
-
-        //handle stringified JSON at each step
-        if (typeof current === "string") {
-          let oldCurrent = current;
-          try {
-            current = JSON.parse(current);
-          } catch (e) {
-            current = oldCurrent;
-          }
-        }
-      }
-
-      // Handle result
-      let result;
-      if (current === undefined) {
-        result = parsedInput;
-      }
-
-      result = current;
-      if (typeof result === "string") {
-        return result;
-      }
-
-      return JSON.stringify(current, null, 2);
-    }
+    expandedNodes = new Set();
   }
 
   function processJson() {
@@ -174,9 +67,10 @@
       try {
         parsedOutput = JSON.parse(result);
         // Auto expand all nodes by default
-        expandedNodes.clear();
-        expandAllNodes(parsedOutput, "");
-        expandedNodes = expandedNodes; // trigger reactivity
+        parsedOutput = JSON.parse(result);
+        const newExpanded = new Set();
+        expandAllNodes(parsedOutput, "", newExpanded);
+        expandedNodes = newExpanded;
       } catch (e) {
         parsedOutput = result;
       }
@@ -186,12 +80,13 @@
   }
 
   function toggleNode(path) {
-    if (expandedNodes.has(path)) {
-      expandedNodes.delete(path);
+    const newExpanded = new Set(expandedNodes);
+    if (newExpanded.has(path)) {
+      newExpanded.delete(path);
     } else {
-      expandedNodes.add(path);
+      newExpanded.add(path);
     }
-    expandedNodes = expandedNodes; // trigger reactivity
+    expandedNodes = newExpanded;
   }
 
   function isExpanded(path) {
@@ -236,81 +131,11 @@
     }
   }
 
-  // Get preview of a value (first 20 chars)
-  function getValuePreview(value) {
-    let preview = "";
-
-    if (value === null) {
-      preview = "null";
-    } else if (value === undefined) {
-      preview = "undefined";
-    } else if (typeof value === "string") {
-      preview = value;
-    } else if (typeof value === "number" || typeof value === "boolean") {
-      preview = String(value);
-    } else if (Array.isArray(value)) {
-      preview = `[${value.length} items]`;
-    } else if (typeof value === "object") {
-      preview = `{${Object.keys(value).length} keys}`;
-    } else {
-      preview = String(value);
-    }
-
-    if (preview.length > 20) {
-      preview = preview.substring(0, 20) + "...";
-    }
-
-    return preview;
-  }
-
-  // Extract all keys from JSON object
-  function extractKeys(obj, prefix = "") {
-    let keys = [];
-
-    if (obj && typeof obj === "object") {
-      if (Array.isArray(obj)) {
-        // For arrays, add index notation without dot prefix
-        obj.forEach((item, index) => {
-          const indexKey = `${prefix}[${index}]`;
-          keys.push({
-            key: indexKey,
-            preview: getValuePreview(item)
-          });
-          if (item && typeof item === "object") {
-            const nestedKeys = extractKeys(item, indexKey);
-            keys = [...keys, ...nestedKeys];
-          }
-        });
-      } else {
-        // For objects, add key names
-        Object.keys(obj).forEach((key) => {
-          const fullKey = prefix ? `${prefix}.${key}` : key;
-          keys.push({
-            key: fullKey,
-            preview: getValuePreview(obj[key])
-          });
-          if (obj[key] && typeof obj[key] === "object") {
-            const nestedKeys = extractKeys(obj[key], fullKey);
-            keys = [...keys, ...nestedKeys];
-          } else if (typeof obj[key] === "string") {
-            // try to parse stringified JSON
-            try {
-              const parsedString = JSON.parse(obj[key]);
-              const nestedKeys = extractKeys(parsedString, fullKey);
-              keys = [...keys, ...nestedKeys];
-            } catch (e) {}
-          }
-        });
-      }
-    }
-
-    return keys;
-  }
-
   // Update available keys when input changes
   function updateAvailableKeys() {
     if (!inputText.trim()) {
       availableKeys = [];
+      filteredSuggestions = [];
       return;
     }
 
@@ -327,8 +152,10 @@
         parsed = parseJsonString(inputText);
       }
       availableKeys = extractKeys(parsed);
+      filteredSuggestions = availableKeys;
     } catch (e) {
       availableKeys = [];
+      filteredSuggestions = [];
     }
   }
 
@@ -457,6 +284,7 @@
 
 <div class="h-full flex flex-col overflow-hidden">
   <!-- Header -->
+  {#if !hideHeader}
   <div class="flex-shrink-0 dark:border-gray-800">
     <div class="flex items-center justify-between px-4 py-3">
       <div class="flex-1">
@@ -538,12 +366,13 @@
       </div>
     {/if}
   </div>
+  {/if}
 
-  <!-- Main Content - Side by Side Layout -->
-  <div class="flex-1 grid lg:grid-cols-2 gap-4 px-4 pb-4 overflow-hidden pt-4">
+  <!-- Main Content - Side by Side Layout (or full width if hideOutput) -->
+  <div class="flex-1 {hideOutput ? 'flex flex-col' : 'grid lg:grid-cols-2'} gap-4 px-4 pb-4 overflow-hidden pt-4">
     <!-- Left Side - Input -->
     <div
-      class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 flex flex-col overflow-hidden"
+      class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 flex flex-col overflow-hidden flex-1"
     >
       <h2
         class="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex-shrink-0"
@@ -551,7 +380,7 @@
         Input
       </h2>
       <div class="flex-1 flex flex-col space-y-3 overflow-hidden">
-        <div class="flex flex-col" style="height: 35%;">
+        <div class="flex flex-col {hideOutput ? 'flex-1' : ''}" style={!hideOutput ? "height: 35%;" : ""}>
           <label
             for="input-text"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex-shrink-0"
@@ -592,8 +421,8 @@
             class="w-full px-3 py-2 bg-gray-50 dark:bg-[#0a0a0a] border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 transition-colors font-mono text-xs"
           />
 
-          <!-- Autocomplete Suggestions -->
-          {#if showSuggestions && filteredSuggestions.length > 0}
+          <!-- Autocomplete Suggestions (Dropdown) - Only show if output is NOT hidden or if looking for specific suggestion behavior -->
+          {#if !hideOutput && showSuggestions && filteredSuggestions.length > 0}
             <div
               bind:this={suggestionsContainer}
               class="absolute z-10 w-full mt-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto"
@@ -616,17 +445,48 @@
             </div>
           {/if}
 
+          <!-- Info text -->
           <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
             Ex: <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded"
               >data.[0].value</code
             >
-            {#if availableKeys.length > 0}
+            {#if availableKeys.length > 0 && !hideOutput}
               <span class="text-green-600 dark:text-green-400"
                 >• {availableKeys.length} keys available</span
               >
             {/if}
           </p>
         </div>
+
+        <!-- Persistent Keys List (When Output is Hidden / Sidebar Mode) -->
+        {#if hideOutput}
+          <div class="flex-1 overflow-auto border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-[#0a0a0a]">
+            {#if availableKeys.length > 0}
+               <div class="divide-y divide-gray-200 dark:divide-gray-800">
+                 {#each filteredSuggestions as suggestion}
+                   <button
+                     type="button"
+                     on:click={() => selectSuggestion(suggestion)}
+                     class="w-full text-left px-3 py-2 text-xs font-mono hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors flex justify-between items-center gap-2 group"
+                   >
+                     <span class="flex-shrink-0 text-blue-600 dark:text-blue-400 font-semibold">{suggestion.key}</span>
+                     <span class="text-gray-500 dark:text-gray-400 text-[10px] flex-shrink truncate group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                       {suggestion.preview}
+                     </span>
+                   </button>
+                 {:else}
+                    <div class="h-full flex items-center justify-center text-gray-400 text-xs p-4">
+                        No matching keys found
+                    </div>
+                 {/each}
+               </div>
+            {:else}
+              <div class="h-full flex items-center justify-center text-gray-400 text-xs p-4">
+                 Enter valid JSON to see available keys
+              </div>
+            {/if}
+          </div>
+        {/if}
 
         <!-- Action Buttons -->
         <div class="flex gap-2 flex-shrink-0">
@@ -647,6 +507,7 @@
     </div>
 
     <!-- Right Side - Output -->
+    {#if !hideOutput}
     <div
       class="bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 p-4 flex flex-col overflow-hidden"
     >
@@ -681,8 +542,9 @@
           {#if viewMode === "tree" && outputText}
             <button
               on:click={() => {
-                expandAllNodes(parsedOutput, "");
-                expandedNodes = expandedNodes;
+                const newExpanded = new Set();
+                expandAllNodes(parsedOutput, "", newExpanded);
+                expandedNodes = newExpanded;
               }}
               class="px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
@@ -745,7 +607,7 @@
               <JsonTreeNode
                 value={parsedOutput}
                 path=""
-                {isExpanded}
+                {expandedNodes}
                 {toggleNode}
               />
             </div>
@@ -774,6 +636,7 @@
         {/if}
       </div>
     </div>
+    {/if}
   </div>
 
   <!-- Copied Notification -->

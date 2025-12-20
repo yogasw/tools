@@ -4,9 +4,9 @@
 This is a **Tools Collection** web application - a modular, modern collection of useful web tools built with Svelte and Tailwind CSS.
 
 ## Tech Stack
-- **Framework**: Svelte 5.x
+- **Framework**: Svelte 5.x (Runes)
 - **Build Tool**: Vite
-- **Styling**: Tailwind CSS v3+
+- **Styling**: Tailwind CSS v4.1 (Mandatory)
 - **Language**: JavaScript (ES6+)
 - **Package Manager**: npm
 
@@ -246,6 +246,7 @@ npm install
 ```
 
 ## Notes for AI Assistants
+- **CRITICAL**: ALWAYS use **Svelte 5 Runes** syntax and **Tailwind CSS 4.1** styling patterns.
 - Always use the existing component library before creating new components
 - Maintain consistent styling with dark mode support
 - Follow the established project structure
