@@ -124,7 +124,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     {#each filteredAndSortedTools as tool}
       <a
-        href={tool.type === "external" ? tool.url : `/${tool.id}`}
+        href={tool.type === "external" ? tool.url : `/tools/${tool.id}/`}
         target={tool.type === "external" ? "_blank" : undefined}
         rel={tool.type === "external" ? "noopener noreferrer" : undefined}
         on:click={(e) => tool.type === "external" && handleExternalClick(e, tool)}

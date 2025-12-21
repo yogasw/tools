@@ -9,12 +9,14 @@ const config = {
 		adapter: adapter({
 			pages: 'dist',
 			assets: 'dist',
-			fallback: '404.html',
+			fallback: null,
 			precompress: false,
 			strict: true
 		}),
+		appDir: 'internal',
 		paths: {
-			base: ''
+			base: '/tools',
+			relative: false
 		},
 		prerender: {
 			handleHttpError: 'warn',

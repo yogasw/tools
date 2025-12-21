@@ -148,7 +148,7 @@
     });
 
   // Check if current page's tool has fullScreen config
-  $: currentToolId = $page.url.pathname.slice(1); // Remove leading /
+  $: currentToolId = $page.url.pathname.match(/\/tools\/([^/]+)/)?.[1] || "";
   $: currentTool = $tools.find(t => t.id === currentToolId);
   $: isFullScreen = currentTool?.fullScreen === true;
 </script>
@@ -291,7 +291,7 @@
               {#each filteredAndSortedTools as tool, index}
                 <a
                   bind:this={toolButtons[index]}
-                  href={tool.type === "external" ? tool.url : `/${tool.id}`}
+                  href={tool.type === "external" ? tool.url : `/tools/${tool.id}`}
                   target={tool.type === "external" ? "_blank" : undefined}
                   rel={tool.type === "external" ? "noopener noreferrer" : undefined}
                   on:click={(e) => tool.type === "external" ? handleExternalClick(e, tool) : handleInternalClick(e, tool)}
