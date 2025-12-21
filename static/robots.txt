@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://tools.yogasw.my.id/sitemap.xml
+Sitemap: https://yogasw.my.id/sitemap.xml

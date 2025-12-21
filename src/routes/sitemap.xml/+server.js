@@ -8,7 +8,7 @@ export const prerender = true;
  * This automatically updates when new tools are added
  */
 export async function GET() {
-  const baseUrl = 'https://tools.yogasw.my.id';
+  const baseUrl = 'https://yogasw.my.id';
   const today = new Date().toISOString().split('T')[0];
 
   // Generate sitemap entries for all internal tools

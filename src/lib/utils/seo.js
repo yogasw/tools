@@ -18,8 +18,8 @@ export function generateToolSEO(tool) {
     ogTitle: tool.ogTitle || tool.name,
     ogDescription: tool.ogDescription || tool.description,
     ogImage: tool.ogImage || '/og-default.png',
-    ogUrl: tool.canonical || `https://tools.yogasw.my.id/${tool.id}`,
-    canonical: tool.canonical || `https://tools.yogasw.my.id/${tool.id}`,
+    ogUrl: tool.canonical || `https://yogasw.my.id/${tool.id}`,
+    canonical: tool.canonical || `https://yogasw.my.id/${tool.id}`,
     type: 'website'
   };
 }
@@ -37,7 +37,7 @@ export function generateToolSchema(tool) {
     '@type': 'WebApplication',
     name: tool.name,
     description: tool.seoDescription || tool.description,
-    url: tool.canonical || `https://tools.yogasw.my.id/${tool.id}`,
+    url: tool.canonical || `https://yogasw.my.id/${tool.id}`,
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Any',
     offers: {
@@ -64,19 +64,19 @@ export function generateHomepageSchema() {
     '@type': 'WebSite',
     name: 'Dev Utilities',
     description: 'Free online developer tools collection',
-    url: 'https://tools.yogasw.my.id/',
+    url: 'https://yogasw.my.id/',
     potentialAction: {
       '@type': 'SearchAction',
       target: {
         '@type': 'EntryPoint',
-        urlTemplate: 'https://tools.yogasw.my.id/?q={search_term_string}'
+        urlTemplate: 'https://yogasw.my.id/?q={search_term_string}'
       },
       'query-input': 'required name=search_term_string'
     },
     author: {
       '@type': 'Organization',
       name: 'Dev Utilities',
-      url: 'https://tools.yogasw.my.id/'
+      url: 'https://yogasw.my.id/'
     }
   };
 
@@ -99,13 +99,13 @@ export function generateBreadcrumbSchema(tool) {
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: 'https://tools.yogasw.my.id/'
+        item: 'https://yogasw.my.id/'
       },
       {
         '@type': 'ListItem',
         position: 2,
         name: tool.name,
-        item: tool.canonical || `https://tools.yogasw.my.id/${tool.id}`
+        item: tool.canonical || `https://yogasw.my.id/${tool.id}`
       }
     ]
   };
