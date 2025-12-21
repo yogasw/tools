@@ -208,7 +208,7 @@ The project is configured for automatic deployment to GitHub Pages via GitHub Ac
 - Builds the project and deploys to GitHub Pages
 
 **Base Path Configuration**:
-- Production (GitHub Pages): `/tools/` (configured in `vite.config.js`)
+- Production (GitHub Pages): `/utilities/` (configured in `vite.config.js`)
 - Development: `/` (set via `VITE_BASE_PATH` environment variable)
 
 **Setup Requirements**:
@@ -225,7 +225,7 @@ To use a custom domain:
 ## Future Improvements
 - Add search/filter for tools
 - Add categories/tags system
-- Implement URL routing (e.g., `/tools/base64`)
+- Implement URL routing (e.g., `/utilities/base64`)
 - Add tool usage analytics
 - Export/import tool configurations
 - PWA support

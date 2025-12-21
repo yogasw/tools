@@ -15,7 +15,7 @@ const config = {
 		}),
 		appDir: 'internal',
 		paths: {
-			base: '/tools',
+			base: '/utilities',
 			relative: false
 		},
 		prerender: {
