@@ -167,8 +167,7 @@
           href="/"
           class="flex items-center space-x-2 hover:opacity-70 transition-opacity"
         >
-          <span class="text-xl">🛠️</span>
-            <span class="text-lg font-bold text-gray-900 dark:text-white">Dev Utilities</span>
+            <span class="text-lg font-bold text-gray-900 dark:text-white">Yoga Setiawan</span>
         </a>
 
         <!-- Right Actions -->
