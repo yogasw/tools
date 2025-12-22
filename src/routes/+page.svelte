@@ -70,7 +70,7 @@
   <div class="text-center space-y-6">
     <!-- Icon -->
     <div class="flex justify-center">
-      <img src="/logo.svg" alt="Dev Utilities - Free Developer Tools Collection" class="w-20 h-20" />
+      <img src="/utilities/logo.svg" alt="Dev Utilities - Free Developer Tools Collection" class="w-20 h-20" />
     </div>
 
     <!-- Title - Only ONE H1 tag -->
