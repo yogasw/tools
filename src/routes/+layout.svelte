@@ -186,6 +186,13 @@
   $: currentToolId = $page.url.pathname.match(/\/utilities\/([^/]+)/)?.[1] || "";
   $: currentTool = $tools.find(t => t.id === currentToolId);
   $: isFullScreen = currentTool?.fullScreen === true;
+
+  // Tutorial button visibility state
+  let isTutorialVisible = true;
+  // Reset visibility when navigating to a different tool
+  $: if (currentToolId) {
+    isTutorialVisible = true;
+  }
 </script>
 
 <svelte:window on:keydown={handleModalKeyDown} />
@@ -291,6 +298,49 @@
     </main>
   {/if}
 </div>
+
+<!-- Floating Tutorial Button -->
+{#if currentTool?.related_article && isTutorialVisible}
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2">
+    <!-- Tooltip/Label -->
+    <div class="bg-black/80 text-white text-xs py-1 px-3 rounded-lg shadow-lg mb-1 animate-fade-in-up">
+      Read Tutorial
+    </div>
+    
+    <div class="relative group">
+      <!-- Dismiss Button -->
+      <button
+        on:click|preventDefault={() => isTutorialVisible = false}
+        class="absolute -top-2 -right-2 z-50 p-1 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-full shadow-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors opacity-0 group-hover:opacity-100"
+        title="Dismiss"
+      >
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <a
+        href={currentTool.related_article}
+        class="flex items-center justify-center w-14 h-14 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
+        title="Read Tutorial for {currentTool.name}"
+      >
+        <svg
+          class="w-7 h-7"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+          />
+        </svg>
+      </a>
+    </div>
+  </div>
+{/if}
 
 <!-- Search Modal -->
 {#if $searchModal}

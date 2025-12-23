@@ -230,6 +230,7 @@ export const toolsRegistry = [
     icon: "🔍",
     type: "internal",
     category: "parser",
+    related_article: "/blog/json-parser-tool/",
     fullScreen: true,
   },
   {
@@ -265,6 +266,7 @@ export const toolsRegistry = [
     icon: "🚀",
     type: "internal",
     category: "converter",
+    related_article: "/blog/json-to-curl-tool/",
     fullScreen: true,
     // Default field mappings for Import feature - user can customize or extend
     defaultMappings: {
