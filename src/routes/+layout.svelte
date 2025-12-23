@@ -7,6 +7,7 @@
   import { recentTools } from "$lib/stores/recent.js";
   import { bookmarks } from "$lib/stores/bookmarks.js";
   import { searchModal } from "$lib/stores/searchModal.js";
+  import { searchIndex } from "$lib/stores/searchIndex.js";
   import "../app.css";
 
   let searchQuery = "";
@@ -14,11 +15,28 @@
   let toolButtons = [];
   let modalSearchInput;
   let isMac = false;
+  let blogResults = [];
 
   onMount(() => {
     theme.init();
     isMac = navigator.userAgent.indexOf("Mac") !== -1;
     window.addEventListener("keydown", handleKeyDown);
+    
+    // Fetch search index for blog posts
+    searchIndex.fetchIndex();
+    
+    // Listen for custom search open event from Hugo pages
+    window.addEventListener('openSearch', () => {
+      searchModal.open();
+    });
+    
+    // Check URL params for search=open
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('search') === 'open') {
+      searchModal.open();
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+    }
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
@@ -67,12 +85,14 @@
   function handleModalKeyDown(e) {
     if (!$searchModal) return;
 
+    const totalResults = filteredAndSortedTools.length + blogResults.length;
+
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
         selectedIndex = Math.min(
           selectedIndex + 1,
-          filteredAndSortedTools.length - 1,
+          totalResults - 1,
         );
         scrollToSelected();
         break;
@@ -118,6 +138,15 @@
     return $bookmarks.includes(toolId);
   }
 
+  $: {
+    // Search blog posts when query changes
+    if (searchQuery && $searchIndex.fuse) {
+      blogResults = searchIndex.search(searchQuery);
+    } else {
+      blogResults = [];
+    }
+  }
+
   $: filteredAndSortedTools = $tools
     .filter((tool) => {
       if (!searchQuery) return true;
@@ -146,6 +175,12 @@
 
       return 0;
     });
+
+  // Combine tools and blog results for keyboard navigation
+  $: allResults = [...filteredAndSortedTools, ...blogResults];
+  $: if (selectedIndex >= allResults.length) {
+    selectedIndex = Math.max(0, allResults.length - 1);
+  }
 
   // Check if current page's tool has fullScreen config
   $: currentToolId = $page.url.pathname.match(/\/utilities\/([^/]+)/)?.[1] || "";
@@ -304,84 +339,140 @@
 
       <!-- Results -->
       <div class="max-h-[400px] overflow-y-auto">
-        {#if filteredAndSortedTools.length > 0}
+        {#if filteredAndSortedTools.length > 0 || blogResults.length > 0}
           <div class="px-3 py-2">
-            <div
-              class="text-xs font-semibold text-gray-500 dark:text-gray-500 px-3 py-2"
-            >
-              Tools
-            </div>
-            <div class="space-y-1">
-              {#each filteredAndSortedTools as tool, index}
-                <a
-                  bind:this={toolButtons[index]}
-                  href={tool.type === "external" ? tool.url : `/utilities/${tool.id}`}
-                  target={tool.type === "external" ? "_blank" : undefined}
-                  rel={tool.type === "external" ? "noopener noreferrer" : undefined}
-                  on:click={(e) => tool.type === "external" ? handleExternalClick(e, tool) : handleInternalClick(e, tool)}
-                  on:mouseenter={() => (selectedIndex = index)}
-                  class="w-full text-left px-3 py-2 rounded transition-colors flex items-center gap-3 group {index ===
-                  selectedIndex
-                    ? 'bg-gray-100 dark:bg-gray-800/70'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'} block no-underline"
-                >
-                  {#if tool.icon.startsWith("http://") || tool.icon.startsWith("https://") || tool.icon.startsWith("/")}
-                <img
-                  src={tool.icon}
-                  alt={tool.name}
-                  class="w-6 h-6 object-contain"
-                />
-              {:else}
-                {tool.icon}
-              {/if}
-                  <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2 flex-wrap">
-                      <span
-                        class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200"
-                      >
-                        {tool.name}
-                      </span>
-                      {#if isBookmarked(tool.id)}
-                        <svg
-                          class="w-3.5 h-3.5 text-yellow-500 fill-current"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                          />
-                        </svg>
-                      {/if}
-                      {#if isRecent(tool.id)}
+            <!-- Tools Section -->
+            {#if filteredAndSortedTools.length > 0}
+              <div
+                class="text-xs font-semibold text-gray-500 dark:text-gray-500 px-3 py-2"
+              >
+                Tools
+              </div>
+              <div class="space-y-1">
+                {#each filteredAndSortedTools as tool, index}
+                  <a
+                    bind:this={toolButtons[index]}
+                    href={tool.type === "external" ? tool.url : `/utilities/${tool.id}`}
+                    target={tool.type === "external" ? "_blank" : undefined}
+                    rel={tool.type === "external" ? "noopener noreferrer" : undefined}
+                    on:click={(e) => tool.type === "external" ? handleExternalClick(e, tool) : handleInternalClick(e, tool)}
+                    on:mouseenter={() => (selectedIndex = index)}
+                    class="w-full text-left px-3 py-2 rounded transition-colors flex items-center gap-3 group {index ===
+                    selectedIndex
+                      ? 'bg-gray-100 dark:bg-gray-800/70'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'} block no-underline"
+                  >
+                    {#if tool.icon.startsWith("http://") || tool.icon.startsWith("https://") || tool.icon.startsWith("/")}
+                  <img
+                    src={tool.icon}
+                    alt={tool.name}
+                    class="w-6 h-6 object-contain"
+                  />
+                {:else}
+                  {tool.icon}
+                {/if}
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center gap-2 flex-wrap">
                         <span
-                          class="px-1.5 py-0.5 text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded"
+                          class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200"
                         >
-                          Recent
+                          {tool.name}
+                        </span>
+                        {#if isBookmarked(tool.id)}
+                          <svg
+                            class="w-3.5 h-3.5 text-yellow-500 fill-current"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                            />
+                          </svg>
+                        {/if}
+                        {#if isRecent(tool.id)}
+                          <span
+                            class="px-1.5 py-0.5 text-xs text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded"
+                          >
+                            Recent
+                          </span>
+                        {/if}
+                        {#if tool.type === "external"}
+                          <svg
+                            class="w-3 h-3 text-gray-500"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                            />
+                          </svg>
+                        {/if}
+                      </div>
+                    </div>
+                  </a>
+                {/each}
+              </div>
+            {/if}
+
+            <!-- Blog Posts Section -->
+            {#if blogResults.length > 0}
+              <div
+                class="text-xs font-semibold text-gray-500 dark:text-gray-500 px-3 py-2 mt-3"
+              >
+                Blog Posts & Pages
+              </div>
+              <div class="space-y-1">
+                {#each blogResults as post, index}
+                  {@const globalIndex = filteredAndSortedTools.length + index}
+                  <a
+                    bind:this={toolButtons[globalIndex]}
+                    href={post.url}
+                    on:click={closeSearchModal}
+                    on:mouseenter={() => (selectedIndex = globalIndex)}
+                    class="w-full text-left px-3 py-2 rounded transition-colors flex items-center gap-3 group {globalIndex ===
+                    selectedIndex
+                      ? 'bg-gray-100 dark:bg-gray-800/70'
+                      : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'} block no-underline"
+                  >
+                    <svg
+                      class="w-5 h-5 text-gray-400 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 truncate">
+                        {post.title}
+                      </div>
+                      {#if post.summary}
+                        <div class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                          {post.summary}
+                        </div>
+                      {/if}
+                      {#if post.type}
+                        <span class="inline-block px-1.5 py-0.5 text-xs text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded mt-1">
+                          {post.type}
                         </span>
                       {/if}
-                      {#if tool.type === "external"}
-                        <svg
-                          class="w-3 h-3 text-gray-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                          />
-                        </svg>
-                      {/if}
                     </div>
-                  </div>
-                </a>
-              {/each}
-            </div>
+                  </a>
+                {/each}
+              </div>
+            {/if}
           </div>
         {:else}
           <div class="px-3 py-8 text-center">
-            <p class="text-sm text-gray-500">No tools found</p>
+            <p class="text-sm text-gray-500">No results found</p>
           </div>
         {/if}
       </div>
