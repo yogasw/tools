@@ -162,15 +162,40 @@
   >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-14">
-        <!-- Logo -->
-        <a
-          href="/"
-          class="flex items-center space-x-2 hover:opacity-70 transition-opacity"
-        >
+        <!-- Left side: Logo and Navigation -->
+        <div class="flex items-center space-x-8">
+          <!-- Logo -->
+          <a
+            href="/"
+            class="flex items-center space-x-2 hover:opacity-70 transition-opacity"
+          >
             <span class="text-lg font-bold text-gray-900 dark:text-white">Yoga Setiawan</span>
-        </a>
+          </a>
+          
+          <!-- Navigation Menu -->
+          <nav class="hidden md:flex items-center space-x-6">
+            <a 
+              href="/" 
+              class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              Home
+            </a>
+            <a 
+              href="/utilities" 
+              class="text-sm font-medium text-gray-900 dark:text-white transition-colors"
+            >
+              🛠️ Dev Utilities
+            </a>
+            <a 
+              href="/blog" 
+              class="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            >
+              Blog
+            </a>
+          </nav>
+        </div>
 
-        <!-- Right Actions -->
+        <!-- Right side: Actions -->
         <div class="flex items-center gap-2">
           <!-- Search Hint -->
           <button
@@ -187,7 +212,7 @@
 
           <!-- GitHub Link -->
           <a
-            href="https://github.com/yogasw/tools"
+            href="https://github.com/yogasw"
             target="_blank"
             rel="noopener noreferrer"
             class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
