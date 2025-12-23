@@ -1,0 +1,14 @@
+name: Trigger Netlify Rebuild
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger-rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Netlify Build
+        run: |
+          curl -X POST -d {} ${{ secrets.YOGASW_BUILD_HOOK }}
