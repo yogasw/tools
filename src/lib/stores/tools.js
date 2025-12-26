@@ -23,7 +23,7 @@ export const homepageSEO = {
   ogDescription:
     "Fast, free, open source, ad-free tools for developers. Base64 encoder, JSON parser, WhatsApp link generator, and more.",
   ogImage: "/og-image.png", // You'll need to create this
-  canonical: "https://yogasw.my.id/",
+  canonical: "https://yogasw.my.id/utilities/",
 };
 
 // Tools registry - tambah tools baru di sini dan akan otomatis muncul di navigation
@@ -62,7 +62,7 @@ export const toolsRegistry = [
     ogDescription:
       "Convert text to Base64 and decode Base64 strings online. Fast, free, and privacy-friendly.",
     ogImage: "/og-base64.png",
-    canonical: "https://yogasw.my.id/base64",
+    canonical: "https://yogasw.my.id/utilities/base64",
     icon: "🔐",
     type: "internal",
     category: "encoding",
@@ -101,7 +101,7 @@ export const toolsRegistry = [
     ogDescription:
       "Create wa.me click-to-chat links instantly for WhatsApp marketing and customer support.",
     ogImage: "/og-whatsapp.png",
-    canonical: "https://yogasw.my.id/wame-link-generator",
+    canonical: "https://yogasw.my.id/utilities/wame-link-generator",
     icon: "💬",
     type: "internal",
     category: "generator",
@@ -139,10 +139,10 @@ export const toolsRegistry = [
     ogDescription:
       "Test your webcam and microphone online. Check camera and mic permissions for video calls.",
     ogImage: "/og-camera.png",
-    canonical: "https://yogasw.my.id/test-permission-camera-and-mic/",
+    canonical: "https://tools.yogasw.my.id/test-permission-camera-and-mic",
     icon: "🎥",
     type: "external",
-    url: "https://yogasw.my.id/test-permission-camera-and-mic/",
+    url: "https://tools.yogasw.my.id/test-permission-camera-and-mic/",
     category: "media",
   },
   {
@@ -179,7 +179,7 @@ export const toolsRegistry = [
     ogDescription:
       "Calculate days, hours, and minutes between two dates. Free online date and time calculator.",
     ogImage: "/og-datetime.png",
-    canonical: "https://yogasw.my.id/date-time-diff",
+    canonical: "https://yogasw.my.id/utilities/date-time-diff",
     icon: "⏱️",
     type: "internal",
     category: "calculator",
@@ -226,7 +226,7 @@ export const toolsRegistry = [
     ogDescription:
       "Parse and format JSON from multiple programming languages. Extract keys, validate, and view JSON structure.",
     ogImage: "/og-json.png",
-    canonical: "https://yogasw.my.id/json-parser",
+    canonical: "https://yogasw.my.id/utilities/json-parser",
     icon: "🔍",
     type: "internal",
     category: "parser",
@@ -352,7 +352,7 @@ export const toolsRegistry = [
     ogDescription:
       "View and search Dialogflow conversation history, chat logs, and intent analytics.",
     ogImage: "/og-dialogflow.png",
-    canonical: "https://yogasw.my.id/dialogflow-history",
+    canonical: "https://yogasw.my.id/utilities/dialogflow-history",
     icon: "💬",
     type: "internal",
     category: "debugging",
