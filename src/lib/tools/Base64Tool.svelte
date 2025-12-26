@@ -66,9 +66,9 @@
 
 <div class="space-y-6">
   <div>
-    <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
       Base64 Encoder/Decoder
-    </h2>
+    </h1>
     <p class="text-gray-600 dark:text-gray-400">
       Encode text to Base64 or decode Base64 strings
     </p>
