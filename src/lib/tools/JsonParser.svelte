@@ -10,7 +10,7 @@
   let parsedOutput = null;
   let error = "";
   let showCopied = false;
-  let viewMode = "text"; // 'text' or 'tree'
+  let viewMode = "text"; // 'text', 'tree', or 'web'
   let expandedNodes = new Set();
   let showFormatsInfo = false;
 
@@ -536,6 +536,15 @@
             >
               Tree
             </button>
+            <button
+              on:click={() => (viewMode = "web")}
+              class="px-3 py-1 text-xs font-medium rounded transition-colors {viewMode ===
+              'web'
+                ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                : 'text-gray-600 dark:text-gray-400'}"
+            >
+              🌐 Web
+            </button>
           </div>
 
           <!-- Tree Controls (only show in tree mode) -->
@@ -610,6 +619,17 @@
                 {expandedNodes}
                 {toggleNode}
               />
+            </div>
+
+            <!-- Web/HTML Mode -->
+          {:else if viewMode === "web"}
+            <div class="h-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+              <iframe
+                title="HTML Preview"
+                srcdoc={outputText}
+                sandbox="allow-scripts allow-same-origin"
+                class="w-full h-full border-0"
+              ></iframe>
             </div>
           {/if}
         {:else}
