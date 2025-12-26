@@ -262,7 +262,7 @@ export const toolsRegistry = [
     ogDescription:
       "Convert JSON requests to Curl commands and simulate API calls online.",
     ogImage: "/og-json-curl.png",
-    canonical: "https://yogasw.my.id/json-to-curl",
+    canonical: "https://yogasw.my.id/utilities/json-to-curl",
     icon: "🚀",
     type: "internal",
     category: "converter",
